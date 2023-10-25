@@ -34,6 +34,11 @@ namespace VacationTests.PageNavigation
             return page;
         }
 
+        public AdminVacationListPage OpenAdminVacationListPage()
+        {
+            return OpenPage<AdminVacationListPage>(Urls.AdminVacationListPage);
+        }
+
         public TPageObject OpenPage<TPageObject>(string url)
             where TPageObject : PageBase
         {

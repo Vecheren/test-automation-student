@@ -1,3 +1,5 @@
+using VacationTests.PageObjects;
+
 namespace VacationTests.PageNavigation
 {
     public static class Urls
@@ -7,10 +9,11 @@ namespace VacationTests.PageNavigation
         // Использовать для локального запуска сервиса Отпуска
         // private const string Host = "http://localhost:8080";
         public const string LoginPage = Host + "/#/";
-
+        public const string AdminVacationListPage = LoginPage + "admin";
+        
         public static string EmployeeVacationListPage(string employeeId)
         {
-            return Host + $"/#/user/{employeeId}";
+            return LoginPage + $"user/{employeeId}";
         }
     }
 }

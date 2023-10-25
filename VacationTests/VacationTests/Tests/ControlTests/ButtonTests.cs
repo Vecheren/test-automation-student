@@ -14,8 +14,7 @@ namespace VacationTests.Tests.ControlTests
         [Test]
         public void WaitExample()
         {
-            // todo для курсанта: заменить на var page = Navigation.OpenAdminVacationList(); после доабвления метода (Задание 2)
-            var page = Navigation.OpenPage<AdminVacationListPage>("https://ronzhina.gitlab-pages.kontur.host/for-course/#/admin");
+            var page = Navigation.OpenAdminVacationListPage();
             // todo для курсанта: после создания рекорда (Задание 6) заменить создание дефолтного отпуска на создание через рекорд
             // ClaimStorage.Add(new[] {Claim.CreateDefault(), Claim.CreateDefault(), Claim.CreateDefault()});
             ClaimStorage.Add(new[] {CreateDefaultClaim(), CreateDefaultClaim(), CreateDefaultClaim()});
