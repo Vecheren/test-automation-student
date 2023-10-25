@@ -19,6 +19,6 @@
     <PackageReference Include="Selenium.WebDriver" Version="4.8.1" />
     <PackageReference Include="Kontur.RetryableAssertions" Version="1.0.0" />
     <PackageReference Include="Kontur.Selone" Version="1.0.0-alpha" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="112.0.5615.4900" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="118.0.5993.7000" />
   </ItemGroup>
 </Project>
