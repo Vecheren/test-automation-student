@@ -1,5 +1,7 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
+using NUnit.Framework;
 using VacationTests.Infrastructure;
+using VacationTests.Infrastructure.PageElements;
 
 namespace VacationTests.Tests.Navigation
 {
@@ -10,7 +12,8 @@ namespace VacationTests.Tests.Navigation
         public void LoginPage_TitleTest()
         {
             var enterPage = Navigation.OpenLoginPage();
-            enterPage.TitleLabel.Text.Wait().EqualTo("Вход в сервис");
+            enterPage.TitleLabel.WaitPresence();
+            enterPage.TitleLabel.Text.Wait().EqualTo(("Вход в сервис"));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace VacationTests.PageObjects
         public LoginPage(IWebDriver webDriver, ControlFactory controlFactory) : base(webDriver)
         {
             // Искать элемент по tid можно с помощью Css().WithTid("...")) - метод Selone
-            TitleLabel = controlFactory.CreateControl<Label>(webDriver.Search(x => x.Css().WithTid("LoginTitleLabel")));
+            TitleLabel = controlFactory.CreateControl<Label>(webDriver.Search(x => x.Css().WithTid("TitleLabel")));
 
             // Можно упростить написание для частых поисков, и создать свой метод WithTid(), чтобы опустить Css(),
             // этот метод будет вызывать Css().WithTid("..."))
@@ -32,7 +32,7 @@ namespace VacationTests.PageObjects
 
         public AdminVacationListPage LoginAsAdmin()
         {
-            return LoginAsEmployeeButton.ClickAndOpen<AdminVacationListPage>();
+            return LoginAsAdminButton.ClickAndOpen<AdminVacationListPage>();
         }
 
         public EmployeeVacationListPage LoginAsEmployee()

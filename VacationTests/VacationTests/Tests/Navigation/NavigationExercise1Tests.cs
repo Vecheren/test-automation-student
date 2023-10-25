@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using VacationTests.Infrastructure;
+using VacationTests.Infrastructure.PageElements;
 
 namespace VacationTests.Tests.Navigation
 {
@@ -10,8 +11,8 @@ namespace VacationTests.Tests.Navigation
         public void LoginPage_EmployeeButtonTest()
         {
             var enterPage = Navigation.OpenLoginPage();
-            enterPage.LoginAsEmployeeButton.Present.Wait().EqualTo(false);
-            enterPage.LoginAsEmployeeButton.Text.Wait().EqualTo("Я кадровик");
+            enterPage.LoginAsEmployeeButton.WaitPresence();
+            enterPage.LoginAsEmployeeButton.Text.Wait().EqualTo("Я сотрудник");
         }
     }
 }
