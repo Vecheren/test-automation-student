@@ -35,5 +35,10 @@ namespace VacationTests.Infrastructure.PageElements
         {
             control.Disabled.Wait().EqualTo(false, timeout);
         }
+        
+        public static void WaitVisible(this ControlBase control, int? timeout = null)
+        {
+            control.Visible.Wait().EqualTo(true, timeout);
+        }
     }
 }
