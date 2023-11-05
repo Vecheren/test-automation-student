@@ -10,7 +10,11 @@ namespace VacationTests.PageNavigation
         // private const string Host = "http://localhost:8080";
         public const string LoginPage = Host + "/#/";
         public const string AdminVacationListPage = LoginPage + "admin";
-        
+
+        public static string ClaimCreationPage(string employeeId)
+        {
+            return LoginPage + $"vacation/{employeeId}";
+        }
         public static string EmployeeVacationListPage(string employeeId)
         {
             return LoginPage + $"user/{employeeId}";
