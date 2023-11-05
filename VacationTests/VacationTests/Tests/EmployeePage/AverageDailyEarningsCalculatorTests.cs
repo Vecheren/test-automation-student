@@ -1,24 +1,15 @@
 ﻿using NUnit.Framework;
 using VacationTests.Infrastructure;
 using VacationTests.Infrastructure.PageElements;
-using VacationTests.PageObjects;
 
 namespace VacationTests.Tests.EmployeePage
 {
     public class AverageDailyEarningsCalculatorTests : VacationTestBase
-    { 
-        private AverageDailyEarningsCalculatorPage Init()
-        {
-            // Я бы перенес в Navigation и назвал OpenAverageDailyEarningsCalculatorPage
-            // Но тогда поди тесты на ulearn развалятся
-            var page = Navigation.OpenEmployeeVacationListPage();
-            return page.SalaryCalculatorTab.ClickAndOpen<AverageDailyEarningsCalculatorPage>();
-        }
-        
+    {
         [Test]
         public void SmokyTest()
         {
-            var calculatorTabPage = Init();
+            var calculatorTabPage = Navigation.OpenAverageDailyEarningsCalculatorPage();
             calculatorTabPage.AverageSalaryRowFirst.YearSelect.WaitVisible();
             calculatorTabPage.AverageSalaryRowFirst.SalaryCurrencyInput.WaitVisible();
             calculatorTabPage.AverageSalaryRowSecond.YearSelect.WaitVisible();
@@ -30,7 +21,7 @@ namespace VacationTests.Tests.EmployeePage
         [Test]
         public void FillAllFields_ShouldCalculateRight()
         {
-            var calculatorTabPage = Init();
+            var calculatorTabPage = Navigation.OpenAverageDailyEarningsCalculatorPage();
             calculatorTabPage.AverageSalaryRowFirst.YearSelect.SelectValueByText("2020");
             calculatorTabPage.AverageSalaryRowSecond.YearSelect.SelectValueByText("2021");
             calculatorTabPage.AverageSalaryRowFirst.SalaryCurrencyInput.ClearAndInputCurrency(100000);
@@ -42,7 +33,7 @@ namespace VacationTests.Tests.EmployeePage
         [Test]
         public void SalaryMoreThanBase_ShouldUseBaseForCalculations()
         {
-            var calculatorTabPage = Init();
+            var calculatorTabPage = Navigation.OpenAverageDailyEarningsCalculatorPage();
             calculatorTabPage.AverageSalaryRowFirst.YearSelect.SelectValueByText("2020");
             calculatorTabPage.AverageSalaryRowFirst.SalaryCurrencyInput.ClearAndInputCurrency(2000000.00m);
             calculatorTabPage.AverageSalaryRowFirst.CountBaseCurrencyLabel.Sum.Wait().EqualTo(912000);
@@ -53,7 +44,7 @@ namespace VacationTests.Tests.EmployeePage
         [Test]
         public void SalaryLessThatBase_ShouldUseSalaryForCalculations()
         {
-            var calculatorTabPage = Init();
+            var calculatorTabPage = Navigation.OpenAverageDailyEarningsCalculatorPage();
             var firstSum = 100000.1m;
             var secondSum = 200000.2m;
             calculatorTabPage.AverageSalaryRowFirst.SalaryCurrencyInput.ClearAndInputCurrency(firstSum);
@@ -62,22 +53,22 @@ namespace VacationTests.Tests.EmployeePage
             calculatorTabPage.AverageSalaryRowSecond.CountBaseCurrencyLabel.Sum.Wait().EqualTo(secondSum);
             calculatorTabPage.TotalEarningsCurrencyLabel.Sum.Wait().EqualTo(firstSum + secondSum);
         }
-        
+
         [Test]
         public void LeapYear_ShouldAddExtraDay()
         {
-            var calculatorTabPage = Init();
+            var calculatorTabPage = Navigation.OpenAverageDailyEarningsCalculatorPage();
             calculatorTabPage.AverageSalaryRowFirst.YearSelect.SelectValueByText("2020");
             calculatorTabPage.AverageSalaryRowSecond.YearSelect.SelectValueByText("2021");
             calculatorTabPage.TotalDaysForCalcLabel.Text.Wait().EqualTo("731");
             calculatorTabPage.AverageSalaryRowFirst.YearSelect.SelectValueByText("2019");
             calculatorTabPage.TotalDaysForCalcLabel.Text.Wait().EqualTo("730");
         }
-        
+
         [Test]
         public void ExcludeDays_ShouldExcludeFromCalculations()
         {
-            var calculatorTabPage = Init();
+            var calculatorTabPage = Navigation.OpenAverageDailyEarningsCalculatorPage();
             calculatorTabPage.AverageSalaryRowFirst.YearSelect.SelectValueByText("2020");
             calculatorTabPage.AverageSalaryRowSecond.YearSelect.SelectValueByText("2021");
             calculatorTabPage.DaysInTwoYearsLabel.Text.Wait().EqualTo("731");
