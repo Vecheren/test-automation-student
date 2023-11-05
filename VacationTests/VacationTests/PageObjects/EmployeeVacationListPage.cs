@@ -17,8 +17,11 @@ namespace VacationTests.PageObjects
             CreateButton = controlFactory.CreateControl<Button>(webDriver.Search(x => x.WithTid("CreateButton")));
             ClaimList = controlFactory.CreateControl<EmployeeClaimList>(webDriver.Search(x => x.WithTid("ClaimList")));
             Footer = controlFactory.CreateControl<PageFooter>(webDriver.Search(x => x.WithTid("Footer")));
+            NoClaimsTextLabel =
+                controlFactory.CreateControl<Label>(webDriver.Search(x => x.WithTid(nameof(NoClaimsTextLabel))));
         }
 
+        public Label NoClaimsTextLabel { get; }
         public Label TitleLabel { get; }
         public Link ClaimsTab { get; }
         public Link SalaryCalculatorTab { get; }
