@@ -21,10 +21,10 @@ namespace VacationTests.Tests.EmployeePage
                 (DateTime.Now.Date.AddDays(50), DateTime.Now.Date.AddDays(55))
             };
             var employeeVacationListPage = Navigation.OpenEmployeeVacationListPage();
-            
+
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0]);
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1]);
-            
+
             var expected = new[]
             {
                 ("Заявление 1", GetPeriodTextFromDates(startAndEndDates[0]), ClaimStatus.NonHandled.GetDescription()),
@@ -33,10 +33,8 @@ namespace VacationTests.Tests.EmployeePage
             CheckClaimOnVacationListPage(employeeVacationListPage, true, expected);
         }
 
-        private string GetPeriodTextFromDates((DateTime, DateTime) dates) => 
-            dates.Item1.ToString("dd.MM.yyyy") + " - " + dates.Item2.ToString("dd.MM.yyyy");
-
-        private void CheckClaimOnVacationListPage(EmployeeVacationListPage page, bool ignoreClaimsOrder, params (string, string, string)[] expected)
+        private void CheckClaimOnVacationListPage(EmployeeVacationListPage page, bool ignoreClaimsOrder,
+            params (string, string, string)[] expected)
         {
             var claims = page.ClaimList.Items
                 .Select(claim => Props.Create(claim.TitleLink.Text, claim.PeriodLabel.Text, claim.StatusLabel.Text))
@@ -50,8 +48,10 @@ namespace VacationTests.Tests.EmployeePage
                 claims.EqualTo(expected);
             }
         }
-        
-        private EmployeeVacationListPage FillClaimCreationPage(EmployeeVacationListPage employeeVacationListPage, ClaimType claimType, (DateTime, DateTime) startAndEndDate, string directorFioLabel = "Захаров Максим Николаевич")
+
+        private EmployeeVacationListPage FillClaimCreationPage(EmployeeVacationListPage employeeVacationListPage,
+            ClaimType claimType, (DateTime, DateTime) startAndEndDate,
+            string directorFioLabel = "Захаров Максим Николаевич")
         {
             var claimCreationPage = employeeVacationListPage.CreateButton.ClickAndOpen<ClaimCreationPage>();
             claimCreationPage.ClaimTypeSelect.SelectValueByText(claimType.GetDescription());
@@ -59,24 +59,14 @@ namespace VacationTests.Tests.EmployeePage
             {
                 claimCreationPage.ChildAgeInput.InputText("2");
             }
+
             claimCreationPage.ClaimStartDatePicker.SetValue(startAndEndDate.Item1.ToString("dd.MM.yyyy"));
             claimCreationPage.ClaimEndDatePicker.SetValue(startAndEndDate.Item2.ToString("dd.MM.yyyy"));
             claimCreationPage.DirectorFioCombobox.SelectValue(directorFioLabel);
             return claimCreationPage.SendButton.ClickAndOpen<EmployeeVacationListPage>();
         }
 
-
-        /*[Test]
-        public void CreateVacations_ShouldAddItemsToClaimsList()
-        {
-            var claimCreationPage = Navigation.OpenEmployeeVacationListPage().CreateButton.ClickAndOpen<ClaimCreationPage>();
-            var employeeVacationListPage = FillClaimCreationPage(claimCreationPage);
-            employeeVacationListPage.CreateButton.ClickAndOpen<ClaimCreationPage>();
-            FillClaimCreationPage(claimCreationPage);
-            // проходит, но надо по хорошему сделать
-            CheckClaimOnVacationListPage(employeeVacationListPage.ClaimList.Items.Wait().GetValue().First());
-            CheckClaimOnVacationListPage(employeeVacationListPage.ClaimList.Items.Wait().GetValue().Last(), 2);
-            
-        }*/
+        private string GetPeriodTextFromDates((DateTime, DateTime) dates) =>
+            dates.Item1.ToString("dd.MM.yyyy") + " - " + dates.Item2.ToString("dd.MM.yyyy");
     }
 }
