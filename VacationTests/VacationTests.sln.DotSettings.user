@@ -1,7 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f80a05d2_002D92f8_002D4a13_002D8c4a_002D0527f4e5d91e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CreateClaimFromUI" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::25F10403-D9F6-41B8-93DE-72FD9CB04CE9::net6.0::VacationTests.Tests.EmployeePage.EmployeeVacationsListUiTests.CreateClaimFromUI&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::25F10403-D9F6-41B8-93DE-72FD9CB04CE9::net6.0::VacationTests.Tests.EmployeePage.EmployeeVacationsListUiTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	

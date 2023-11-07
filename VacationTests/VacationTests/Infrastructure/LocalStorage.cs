@@ -18,7 +18,7 @@ namespace VacationTests.Infrastructure
         // Очистка всего хранилища
         public void Clear()
         {
-            // todo для курсанта: написать код
+            webDriver.JavaScriptExecutor().ExecuteScript($"localStorage.clear();");
         }
 
         // Получение данных по ключу keyName
