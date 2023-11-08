@@ -4,6 +4,7 @@ using Kontur.Selone.Extensions;
 using Kontur.Selone.Properties;
 using NUnit.Framework;
 using VacationTests.Claims;
+using VacationTests.Data;
 using VacationTests.Infrastructure;
 using VacationTests.Infrastructure.PageElements;
 using VacationTests.PageObjects;
@@ -15,44 +16,26 @@ namespace VacationTests.Tests.EmployeePage
         [TearDown]
         public new void TearDown()
         {
-            // должно быть в LocalStorage.Clean, но там ulearn не увидит
             WebDriver.JavaScriptExecutor().ExecuteScript("localStorage.clear();");
         }
-
-        [Test]
-        public void CreateClaimFromUI()
+        
+        private EmployeeVacationListPage Init()
         {
-            var startAndEndDates = new[]
-            {
-                (DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(110))
-            };
-            var employeeVacationListPage = Navigation.OpenEmployeeVacationListPage();
-            
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 3);
-
-            employeeVacationListPage
-                .ClaimList.Items
-                .Select(claim => Props.Create(claim.TitleLink.Text, claim.PeriodLabel.Text, claim.StatusLabel.Text))
-                .Wait()
-                .EquivalentTo(new[]
-                {
-                    ("Заявление 1", startAndEndDates[0].ToString(" - "),
-                        ClaimStatus.NonHandled.GetDescription())
-                });
+            return Navigation.OpenEmployeeVacationListPage();
         }
 
         [Test]
         public void CreateVacations_ShouldAddItemsToClaimsList()
         {
+            var employeeVacationListPage = Init();
             var startAndEndDates = new[]
             {
                 (DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(110)),
                 (DateTime.Now.Date.AddDays(50), DateTime.Now.Date.AddDays(54)),
             };
-            var employeeVacationListPage = Navigation.OpenEmployeeVacationListPage();
-
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 4);
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 5);
+            
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], Directors.Default,4);
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], Directors.Default,5);
             
             employeeVacationListPage.ClaimList.Items.Count.Wait().EqualTo(2); 
         }
@@ -60,17 +43,17 @@ namespace VacationTests.Tests.EmployeePage
         [Test]
         public void ClaimsList_ShouldDisplayRightTitles_InRightOrder()
         {
+            var employeeVacationListPage = Init();
             var startAndEndDates = new[]
             {
                 (DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(110)),
                 (DateTime.Now.Date.AddDays(50), DateTime.Now.Date.AddDays(55)),
                 (DateTime.Now.Date.AddDays(28), DateTime.Now.Date.AddDays(33))
             };
-            var employeeVacationListPage = Navigation.OpenEmployeeVacationListPage();
             
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 6);
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 7);
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[2], 8);
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], Directors.Default,6);
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], Directors.Default,7);
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[2], Directors.Default,8);
             
             employeeVacationListPage
                 .ClaimList.Items
@@ -82,15 +65,15 @@ namespace VacationTests.Tests.EmployeePage
         [Test]
         public void ClaimsList_ShouldDisplayRightTitleAndStatus_IgnoringOrder()
         {
+            var employeeVacationListPage = Init();
             var startAndEndDates = new[]
             {
                 (DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(110)),
                 (DateTime.Now.Date.AddDays(50), DateTime.Now.Date.AddDays(55))
             };
-            var employeeVacationListPage = Navigation.OpenEmployeeVacationListPage();
 
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 1);
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 9);
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], Directors.Default, 1);
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], Directors.Default,9);
            
             employeeVacationListPage
                 .ClaimList.Items
@@ -106,15 +89,15 @@ namespace VacationTests.Tests.EmployeePage
         [Test]
         public void ClaimsList_ShouldDisplayRightPeriodForItem()
         {
+            var employeeVacationListPage = Init();
             var startAndEndDates = new[]
             {
                 (DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(110)),
                 (DateTime.Now.Date.AddDays(117), DateTime.Now.Date.AddDays(120))
             };
-            var employeeVacationListPage = Navigation.OpenEmployeeVacationListPage();
 
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 2);
-            FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 3);
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], Directors.Default,2);
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], Directors.Default,3);
 
             employeeVacationListPage.ClaimList.Items
                 .Wait()
@@ -124,11 +107,11 @@ namespace VacationTests.Tests.EmployeePage
                 .EqualTo(startAndEndDates[1].ToString(" - "));
         }
 
-        private EmployeeVacationListPage FillClaimCreationPage(EmployeeVacationListPage employeeVacationListPage,
+        private EmployeeVacationListPage CreateClaimFromUI(EmployeeVacationListPage employeeVacationListPage,
             ClaimType claimType,
             (DateTime, DateTime) startAndEndDate,
-            int? childAge = null,
-            string directorFioLabel = "Захаров Максим Николаевич")
+            Director director,
+            int? childAge = null)
         {
             employeeVacationListPage.CreateButton.WaitPresence();
             var claimCreationPage = employeeVacationListPage.CreateButton.ClickAndOpen<ClaimCreationPage>();
@@ -140,7 +123,7 @@ namespace VacationTests.Tests.EmployeePage
 
             claimCreationPage.ClaimStartDatePicker.SetValue(startAndEndDate.Item1.ToString("dd.MM.yyyy"));
             claimCreationPage.ClaimEndDatePicker.SetValue(startAndEndDate.Item2.ToString("dd.MM.yyyy"));
-            claimCreationPage.DirectorFioCombobox.SelectValue(directorFioLabel);
+            claimCreationPage.DirectorFioCombobox.SelectValue(Directors.Default.Name);
             employeeVacationListPage = claimCreationPage.SendButton.ClickAndOpen<EmployeeVacationListPage>();
             employeeVacationListPage.CreateButton.WaitPresence();
             return employeeVacationListPage;
