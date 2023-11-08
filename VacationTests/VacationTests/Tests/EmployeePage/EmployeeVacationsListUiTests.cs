@@ -16,7 +16,7 @@ namespace VacationTests.Tests.EmployeePage
         public new void TearDown()
         {
             // должно быть в LocalStorage.Clean, но там ulearn не увидит
-            WebDriver.JavaScriptExecutor().ExecuteScript($"localStorage.clear();");
+            WebDriver.JavaScriptExecutor().ExecuteScript("localStorage.clear();");
         }
 
         [Test]
@@ -117,7 +117,8 @@ namespace VacationTests.Tests.EmployeePage
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 3);
 
             employeeVacationListPage.ClaimList.Items
-                .Single(x => x.TitleLink.Text.Get() == "Заявление 2")
+                .Wait()
+                .Single(x => x.TitleLink.Text, Is.EqualTo("Заявление 2"))
                 .PeriodLabel.Text
                 .Wait()
                 .EqualTo(startAndEndDates[1].ToString(" - "));
