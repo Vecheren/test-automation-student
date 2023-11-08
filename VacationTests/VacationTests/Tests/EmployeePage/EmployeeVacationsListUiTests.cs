@@ -27,6 +27,7 @@ namespace VacationTests.Tests.EmployeePage
                 (DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(110))
             };
             var employeeVacationListPage = Navigation.OpenEmployeeVacationListPage();
+            
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 3);
 
             employeeVacationListPage
@@ -52,6 +53,7 @@ namespace VacationTests.Tests.EmployeePage
 
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 4);
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 5);
+            
             employeeVacationListPage.ClaimList.Items.Count.Wait().EqualTo(2); 
         }
 
@@ -65,9 +67,11 @@ namespace VacationTests.Tests.EmployeePage
                 (DateTime.Now.Date.AddDays(28), DateTime.Now.Date.AddDays(33))
             };
             var employeeVacationListPage = Navigation.OpenEmployeeVacationListPage();
+            
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 6);
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 7);
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[2], 8);
+            
             employeeVacationListPage
                 .ClaimList.Items
                 .Select(claim => claim.TitleLink.Text)
@@ -87,6 +91,7 @@ namespace VacationTests.Tests.EmployeePage
 
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 1);
             FillClaimCreationPage(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 9);
+           
             employeeVacationListPage
                 .ClaimList.Items
                 .Select(claim => Props.Create(claim.TitleLink.Text, claim.PeriodLabel.Text, claim.StatusLabel.Text))
