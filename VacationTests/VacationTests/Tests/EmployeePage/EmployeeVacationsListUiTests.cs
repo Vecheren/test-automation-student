@@ -18,7 +18,7 @@ namespace VacationTests.Tests.EmployeePage
         {
             WebDriver.JavaScriptExecutor().ExecuteScript("localStorage.clear();");
         }
-        
+
         private EmployeeVacationListPage Init()
         {
             return Navigation.OpenEmployeeVacationListPage();
