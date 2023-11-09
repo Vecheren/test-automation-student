@@ -12,6 +12,6 @@ namespace VacationTests.Data
             .WithPosition("Руководитель управления")
             .Build();
         
-        public static DirectorBuilder New => new DirectorBuilder();
+        public static DirectorBuilder New => new();
     }
 }

@@ -1,16 +1,18 @@
 namespace VacationTests.Claims
 {
-    public class Director
+    public record Director(
+        int Id,
+        string Name,
+        string Position)
     {
-        public Director(int id, string name, string position)
+        public static Director CreateDefault()
         {
-            Id = id;
-            Name = name;
-            Position = position;
+            return new Director(14, "Бублик Владимир Кузьмич", "Директор департамента");
         }
 
-        public int Id { get; }
-        public string Name { get; }
-        public string Position { get; }
+        public static Director CreateSuperDirector()
+        {
+            return new Director(24320, "Кирпичников Алексей Николаевич", "Руководитель управления");
+        }
     }
 }
