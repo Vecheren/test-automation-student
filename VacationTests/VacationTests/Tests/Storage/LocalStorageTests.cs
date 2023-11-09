@@ -18,12 +18,11 @@ namespace VacationTests.Tests.Storage
 
         private EmployeeVacationListPage employeePage;
 
-        /* todo для курсантов: после рализации методов LocalStorage расскоментировать и прогнать тесты
         [SetUp]
         public void SetUp()
         {
             // Открытие списка отпусков
-            employeePage = Navigation.OpenEmployeeVacationList();
+            employeePage = Navigation.OpenEmployeeVacationListPage();
 
             // Перед каждым тестом этого класса делается очитска LocalStorage, поскольку
             // в данном случае все тесты идут последовательно
@@ -148,6 +147,6 @@ namespace VacationTests.Tests.Storage
 
             // Проверка, что в LocalStorage ключ с индексом 0 == ClaimsKeyName
             Assert.That(LocalStorage.Key(0).Equals(ClaimsKeyName));
-        }*/
+        }
     }
 }
