@@ -35,16 +35,12 @@ namespace VacationTests.Tests
         public void EnterWorker()
         {
             // Arrange
-            var defaultDirector = new Director(14, "Бублик Владимир Кузьмич", "Директор департамента");
-            var claim = new Claim("567", ClaimType.Study, ClaimStatus.Accepted, defaultDirector,
-                DateTime.Now.Date, DateTime.Now.AddDays(3), null, employeeId, true);
-            // todo для курсанта: после создания рекорда (Задание 6) заменить две строки выше на код ниже
-            // var claim = Claim.CreateDefault() with
-            // {
-            //     UserId = employeeId,
-            //     Status = ClaimStatus.Accepted,
-            //     EndDate = DateTime.Now.AddDays(3)
-            // };
+            var claim = Claim.CreateDefault() with
+            {
+                 UserId = employeeId,
+                 Status = ClaimStatus.Accepted,
+                 EndDate = DateTime.Now.AddDays(3)
+             };
             ClaimStorage.Add(new[] {claim});
 
             // Act
