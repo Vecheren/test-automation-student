@@ -1,4 +1,5 @@
 using System;
+using VacationTests.Data;
 
 namespace VacationTests.Claims
 {
@@ -13,6 +14,10 @@ namespace VacationTests.Claims
         private ClaimStatus status = ClaimStatus.NonHandled;
         private string userId = DefaultUserId;
         private int? childAgeInMonths;
+        private Director director = Directors.Default;
+        private DateTime startDate = DateTime.Now.Date.AddDays(7);
+        private DateTime endDate = DateTime.Now.Date.AddDays(12);
+        private bool paidNow; 
 
         // Для каждого поля создаем метод With<название свойства>, возвращающий экземпляр этого DirectorBuilder
         // Метод принимает значение и записывает в соответствующее приватное поле
@@ -53,17 +58,57 @@ namespace VacationTests.Claims
             return this;
         }
 
+        public ClaimBuilder WithDirector(Director newDirector)
+        {
+            director = newDirector;
+            return this;
+        }
+
+        public ClaimBuilder WithStartDate(DateTime newStartDate)
+        {
+            startDate = newStartDate.Date;
+            return this;
+        }
+
+        public ClaimBuilder WithEndDate(DateTime newEndDate)
+        {
+            endDate = newEndDate.Date;
+            return this;
+        }
+
+        public ClaimBuilder WithPeriod(DateTime newStartDate, DateTime newEndDate)
+        {
+            if (newEndDate < newStartDate)
+            {
+                throw new Exception("Дата начала отпуска должна быть раньше даты конца отпуска");
+            }
+            if (newEndDate - newStartDate < TimeSpan.FromDays(3))
+            {
+                throw new Exception("Минимальный период отпуска должен быть 3 дня");
+            }
+            
+            startDate = newStartDate.Date;
+            endDate = newEndDate.Date;
+            return this;
+        }
+
+        public ClaimBuilder WithPaidNow(bool newPaidNow)
+        {
+            paidNow = newPaidNow;
+            return this;
+        }
+        
         // Основной метод, который возвращает экземпляр класса Claim
-        public Claim Build() => new Claim(
+        public Claim Build() => new(
             id,
             type,
             status,
-            new Director(14, "Бублик Владимир Кузьмич", "Директор департамента"),
-            DateTime.Now.Date.AddDays(7),
-            DateTime.Now.Date.AddDays(12),
+            director,
+            startDate,
+            endDate,
             childAgeInMonths,
             userId,
-            false
+            paidNow
         );
     }
 }
