@@ -12,13 +12,13 @@ namespace VacationTests.Claims
         [property: JsonConverter(typeof(StringEnumConverter))]
         ClaimType Type,
         ClaimStatus Status,
-        int? ChildAgeInMonths,
-        string UserId,
         Director Director,
         DateTime StartDate,
         DateTime EndDate,
+        int? ChildAgeInMonths,
+        string UserId,
         bool PaidNow)
-    { 
+    {
         public static Claim CreateDefault()
         {
             var random = new Random();
@@ -28,11 +28,11 @@ namespace VacationTests.Claims
                 randomClaimId,
                 ClaimType.Paid,
                 ClaimStatus.NonHandled,
-                null,
-                "1",
                 Directors.Default,
                 DateTime.Now.Date.AddDays(7),
                 DateTime.Now.Date.AddDays(12),
+                null,
+                "1",
                 false
             );
         }
