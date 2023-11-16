@@ -32,11 +32,11 @@ namespace VacationTests.Tests.EmployeePage
                 (DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(110)),
                 (DateTime.Now.Date.AddDays(50), DateTime.Now.Date.AddDays(54)),
             };
-            
+
             CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 4);
             CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 5);
-            
-            employeeVacationListPage.ClaimList.Items.Count.Wait().EqualTo(2); 
+
+            employeeVacationListPage.ClaimList.Items.Count.Wait().EqualTo(2);
         }
 
         [Test]
@@ -49,18 +49,18 @@ namespace VacationTests.Tests.EmployeePage
                 (DateTime.Now.Date.AddDays(50), DateTime.Now.Date.AddDays(55)),
                 (DateTime.Now.Date.AddDays(28), DateTime.Now.Date.AddDays(33))
             };
-            
+
             CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 6);
             CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 7);
             CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[2], 8);
-            
+
             employeeVacationListPage
                 .ClaimList.Items
                 .Select(claim => claim.TitleLink.Text)
                 .Wait()
-                .EqualTo(new[]{"Заявление 1", "Заявление 2", "Заявление 3"});
+                .EqualTo(new[] { "Заявление 1", "Заявление 2", "Заявление 3" });
         }
-        
+
         [Test]
         public void ClaimsList_ShouldDisplayRightTitleAndStatus_IgnoringOrder()
         {
@@ -72,8 +72,8 @@ namespace VacationTests.Tests.EmployeePage
             };
 
             CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[0], 1);
-            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[1],9);
-           
+            CreateClaimFromUI(employeeVacationListPage, ClaimType.Child, startAndEndDates[1], 9);
+
             employeeVacationListPage
                 .ClaimList.Items
                 .Select(claim => Props.Create(claim.TitleLink.Text, claim.PeriodLabel.Text, claim.StatusLabel.Text))

@@ -4,6 +4,7 @@ using Kontur.Selone.Pages;
 using Kontur.Selone.Properties;
 using NUnit.Framework;
 using VacationTests.Claims;
+using VacationTests.Helpers;
 using VacationTests.Infrastructure;
 using VacationTests.Infrastructure.PageElements;
 using VacationTests.PageObjects;
@@ -31,7 +32,7 @@ namespace VacationTests.Tests.EmployeePage
             var employeeVacationListPage = Init();
             ClaimStorage.Add(new[]{Claim.CreateChildType()});
             var claim = Claim.CreateChildType();
-            CreateClaimFromUI(employeeVacationListPage, claim.Type, (claim.StartDate, claim.EndDate), claim.ChildAgeInMonths);
+            Helper.CreateClaimFromUI(employeeVacationListPage, claim.Type, (claim.StartDate, claim.EndDate), claim.ChildAgeInMonths);
             employeeVacationListPage.Refresh();
             
             employeeVacationListPage.ClaimList.Items.Count.Wait().EqualTo(2); 
@@ -102,37 +103,6 @@ namespace VacationTests.Tests.EmployeePage
                 .PeriodLabel.Text
                 .Wait()
                 .EqualTo((claim2.StartDate, claim2.EndDate).ToString(" - "));
-        }
-        
-        private EmployeeVacationListPage CreateClaimFromUI(EmployeeVacationListPage employeeVacationListPage,
-            ClaimType claimType,
-            (DateTime, DateTime) startAndEndDate,
-            int? childAge = null,
-            string directorFio = "Захаров Максим Николаевич")
-        {
-            employeeVacationListPage.CreateButton.WaitPresence();
-            var claimCreationPage = employeeVacationListPage.CreateButton.ClickAndOpen<ClaimCreationPage>();
-            claimCreationPage.ClaimTypeSelect.SelectValueByText(claimType.GetDescription());
-            if (childAge != null)
-            {
-                claimCreationPage.ChildAgeInput.InputText($"{childAge}");
-            }
-
-            claimCreationPage.ClaimStartDatePicker.SetValue(startAndEndDate.Item1.ToString("dd.MM.yyyy"));
-            claimCreationPage.ClaimEndDatePicker.SetValue(startAndEndDate.Item2.ToString("dd.MM.yyyy"));
-            claimCreationPage.DirectorFioCombobox.SelectValue(directorFio);
-            employeeVacationListPage = claimCreationPage.SendButton.ClickAndOpen<EmployeeVacationListPage>();
-            employeeVacationListPage.CreateButton.WaitPresence();
-            return employeeVacationListPage;
-        }
-    }
-    
-    public static class DateTimeTupleExtensions
-    {
-        public static string ToString(this (DateTime, DateTime) startAndEndDate, string divider)
-        {
-            return string.Join(divider, new[] { startAndEndDate.Item1, startAndEndDate.Item2 }
-                .Select(x => x.ToString("dd.MM.yyyy")));
         }
     }
 }

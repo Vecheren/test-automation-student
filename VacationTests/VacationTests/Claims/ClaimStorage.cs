@@ -16,6 +16,24 @@ namespace VacationTests.Claims
             this.localStorage = localStorage;
         }
 
+
+        public void Add(Claim2[] claims)
+        {
+            // SetItem у localStorage перетерает значения по заданному ключу
+            // поэтому мы сначала читаем текущее значение ключа
+            var existingClaims = GetAll(true);
+            if (existingClaims == null)
+            {
+                localStorage.SetItem(ClaimsKeyName, Serialize(claims));
+            }
+            else // для случая, если у нас в localStorage уже есть отпуска
+            {
+                // соединяем массив старых значений с новыми
+                var newClaims = existingClaims.Concat(claims);
+                // записываем все отпуска в localStorage
+                localStorage.SetItem(ClaimsKeyName, Serialize(newClaims));
+            }
+        }
         public void Add(Claim[] claims)
         {
             // SetItem у localStorage перетерает значения по заданному ключу
@@ -38,6 +56,12 @@ namespace VacationTests.Claims
         {
             var localStorageArray = localStorage.GetItem(ClaimsKeyName);
             return localStorageArray != null ? Deserialize<Claim[]>(localStorageArray) : null;
+        }
+
+        public Claim2[] GetAll(bool x = true)
+        {
+            var localStorageArray = localStorage.GetItem(ClaimsKeyName);
+            return localStorageArray != null ? Deserialize<Claim2[]>(localStorageArray) : null;
         }
 
         public void Add(Claim claim)

@@ -16,13 +16,14 @@ namespace VacationTests.PageObjects
             ClaimsTab = controlFactory.CreateControl<Link>(webDriver.Search(x => x.WithTid("ClaimsTab")));
             DownloadButton = controlFactory.CreateControl<Button>(webDriver.Search(x => x.WithTid("DownloadButton")));
             Footer = controlFactory.CreateControl<PageFooter>(webDriver.Search(x => x.WithTid("Footer")));
+            ClaimList = controlFactory.CreateControl<AdminClaimList>(webDriver.Search(x => x.WithTid("ClaimList")));
         }
 
+        public AdminClaimList ClaimList;
         public Label TitleLabel { get; }
         public Link ClaimsTab { get; }
         public Button DownloadButton { get; }
         public PageFooter Footer { get; }
-
         public bool IsAdminPage
         {
             get

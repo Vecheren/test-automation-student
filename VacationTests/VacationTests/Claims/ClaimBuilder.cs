@@ -1,4 +1,4 @@
-/*using System;
+using System;
 using VacationTests.Data;
 
 namespace VacationTests.Claims
@@ -99,7 +99,7 @@ namespace VacationTests.Claims
         }
         
         // Основной метод, который возвращает экземпляр класса Claim
-        public Claim Build() => new(
+        public Claim2 Build() => new(
             id,
             type,
             status,
@@ -111,4 +111,4 @@ namespace VacationTests.Claims
             paidNow
         );
     }
-}*/
+}
