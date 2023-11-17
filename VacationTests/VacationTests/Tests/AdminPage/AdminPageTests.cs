@@ -42,7 +42,7 @@ namespace VacationTests.Tests.AdminPage
         }
 
         [Test]
-        public void CreateClaims_ShouldAddClaimsToAdminPage()
+        public void CreateClaims_FromLocalStorage_ShouldAddClaimsToAdminPage()
         {
             var adminVacationListPage = Navigation.OpenAdminVacationListPage();
             ClaimStorage.Add(new[] { Claim.CreateChildType(), Claim.CreateChildType() });
@@ -51,7 +51,7 @@ namespace VacationTests.Tests.AdminPage
         }
 
         [Test]
-        public void CheckButtons_WithoutOrder_ShouldSuccess()
+        public void ClaimsButtons_CheckWithoutOrder_ShouldSuccess()
         {
             var adminVacationListPage = Navigation.OpenAdminVacationListPage();
             var claims = new[]
@@ -70,7 +70,7 @@ namespace VacationTests.Tests.AdminPage
 
         [TestCase(true)]
         [TestCase(false)]
-        public void ClaimContent_ShouldBeCorrect(bool checkOnList)
+        public void ClaimContent_OnClaimList_ShouldBeCorrect(bool checkOnList)
         {
             var adminVacationPage = Navigation.OpenAdminVacationListPage();
             var claim = new ClaimBuilder().Build();
@@ -116,7 +116,7 @@ namespace VacationTests.Tests.AdminPage
         }
 
         [TestCaseSource(nameof(ClaimLightBoxCases))]
-        public void AcceptClaim_FromLightbox_ShouldChangeStatus(Func<ClaimLightbox, Button> getButton, string status)
+        public void ChangeClaimStatus_FromLightbox_ShouldSuccess(Func<ClaimLightbox, Button> getButton, string status)
         {
             var adminVacationPage = Navigation.OpenAdminVacationListPage();
             var claim = new ClaimBuilder().Build();
@@ -128,7 +128,7 @@ namespace VacationTests.Tests.AdminPage
         }
 
         [TestCaseSource(nameof(ClaimListCases))]
-        public void RejectClaim_FromList_ShouldChangeStatus(Func<AdminClaimItem, Button> getButton, string status)
+        public void ChangeClaimStatus_FromList_ShouldSuccess(Func<AdminClaimItem, Button> getButton, string status)
         {
             var adminVacationPage = Navigation.OpenAdminVacationListPage();
             var claim = new ClaimBuilder().Build();
@@ -141,7 +141,7 @@ namespace VacationTests.Tests.AdminPage
 
 
         [Test]
-        public void CheckClaims_WithOrder_ShouldSuccess()
+        public void CreateClaims_CheckWithOrder_ShouldSuccess()
         {
             var adminVacationPage = Navigation.OpenAdminVacationListPage();
             var claimBuilder = new ClaimBuilder();
