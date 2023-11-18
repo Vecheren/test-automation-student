@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using VacationTests.Claims;
@@ -22,19 +20,19 @@ namespace VacationTests
         private ControlFactory ControlFactory => new(LocalStorage, ClaimStorage);
         protected Navigation Navigation => new(WebDriver, ControlFactory);
         private Screenshoter Screenshoter => new(WebDriver); 
-
-        [OneTimeTearDown]
-        protected void OneTimeTearDown()
-        {
-            MyBrowserPool.Dispose();
-        }
-
+        
         [TearDown]
         public void TearDown()
         {
             ClaimStorage.ClearClaims();
             Screenshoter.SaveTestFailureScreenshot();
             MyBrowserPool.Release();
+        }
+
+        [OneTimeTearDown]
+        protected void OneTimeTearDown()
+        {
+            MyBrowserPool.Dispose();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace VacationTests.Extensions
+namespace VacationTests
 {
     public static class DateTimeTupleExtensions
     {
