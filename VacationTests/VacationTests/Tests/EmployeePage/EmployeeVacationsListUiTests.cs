@@ -12,12 +12,6 @@ namespace VacationTests.Tests.EmployeePage
 {
     public class EmployeeVacationsListUiTests : VacationTestBase
     {
-        [TearDown]
-        public new void TearDown()
-        {
-            WebDriver.JavaScriptExecutor().ExecuteScript("localStorage.clear();");
-        }
-
         private EmployeeVacationListPage Init()
         {
             return Navigation.OpenEmployeeVacationListPage();

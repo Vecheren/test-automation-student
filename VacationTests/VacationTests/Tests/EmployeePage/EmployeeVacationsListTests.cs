@@ -13,12 +13,6 @@ namespace VacationTests.Tests.EmployeePage
 {
     public class EmployeeVacationsListTests : VacationTestBase
     {
-        [TearDown]
-        public new void TearDown()
-        {
-            ClaimStorage.ClearClaims();
-        }
-
         private EmployeeVacationListPage Init()
         {
             var page = Navigation.OpenEmployeeVacationListPage();

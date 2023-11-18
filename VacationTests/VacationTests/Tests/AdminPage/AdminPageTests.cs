@@ -19,12 +19,6 @@ namespace VacationTests.Tests.AdminPage
 {
     public class AdminPageTests : VacationTestBase
     {
-        [TearDown]
-        public void TearDown()
-        {
-            ClaimStorage.ClearClaims();
-        }
-
         [Test]
         public void CreateClaims_FromUI_ShouldAddClaimsToAdminPage()
         {
