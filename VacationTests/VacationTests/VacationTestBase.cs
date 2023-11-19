@@ -19,7 +19,7 @@ namespace VacationTests
         protected IWebDriver WebDriver => MyBrowserPool.Get();
         protected ClaimStorage ClaimStorage => new(LocalStorage);
         protected LocalStorage LocalStorage => new(WebDriver);
-        private ControlFactory ControlFactory => new(LocalStorage, ClaimStorage);
+        private ControlFactory ControlFactory => new(WebDriver, LocalStorage, ClaimStorage);
         protected Navigation Navigation => new(WebDriver, ControlFactory);
         private Screenshoter Screenshoter => new(WebDriver); 
         
