@@ -17,6 +17,8 @@ namespace VacationTests.Tests.EmployeePage
         {
             var page = Navigation.OpenEmployeeVacationListPage();
             ClaimStorage.ClearClaims();
+            page.Refresh();
+            page.ClaimList.Items.Count.Wait().EqualTo(0);
             return page;
         }
 

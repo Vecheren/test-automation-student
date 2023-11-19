@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Kontur.Selone.Extensions;
+using Kontur.Selone.Pages;
 using Kontur.Selone.Properties;
 using NUnit.Framework;
 using VacationTests.Claims;
@@ -14,7 +15,11 @@ namespace VacationTests.Tests.EmployeePage
     {
         private EmployeeVacationListPage Init()
         {
-            return Navigation.OpenEmployeeVacationListPage();
+            var page = Navigation.OpenEmployeeVacationListPage();
+            ClaimStorage.ClearClaims();
+            page.Refresh();
+            page.ClaimList.Items.Count.Wait().EqualTo(0);
+            return page;
         }
 
         [Test]

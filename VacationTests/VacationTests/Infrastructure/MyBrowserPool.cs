@@ -50,12 +50,6 @@ namespace VacationTests.Infrastructure
 
         public static void Dispose()
         {
-            foreach (var driver in webDriversMap.Values)
-            {
-                driver.Dispose();   
-            }
-                
-            webDriversMap.Clear();
             pool.Clear();
         }
     }
