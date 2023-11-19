@@ -26,18 +26,24 @@ namespace VacationTests
         [TearDown]
         public void TearDown()
         {
-            ClaimStorage.ClearClaims();
-            Screenshoter.SaveTestFailureScreenshot();
+            try
+            {
+                ClaimStorage.ClearClaims();
+                Screenshoter.SaveTestFailureScreenshot();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
             try
             {
                 MyBrowserPool.Release();
             }
-            catch (Exception e)
+            catch(Exception e)
             {
-                Console.WriteLine("Не удалось выполнить MyBrowserPool.Release()");
                 Console.WriteLine(e);
             }
-            
         }
 
         [OneTimeTearDown]
