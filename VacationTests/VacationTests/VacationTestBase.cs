@@ -1,3 +1,5 @@
+using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using VacationTests.Claims;
@@ -26,13 +28,30 @@ namespace VacationTests
         {
             ClaimStorage.ClearClaims();
             Screenshoter.SaveTestFailureScreenshot();
-            MyBrowserPool.Release();
+            try
+            {
+                MyBrowserPool.Release();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Не удалось выполнить MyBrowserPool.Release()");
+                Console.WriteLine(e);
+            }
+            
         }
 
         [OneTimeTearDown]
         protected void OneTimeTearDown()
         {
-            MyBrowserPool.Dispose();
+            try
+            {
+                MyBrowserPool.Dispose();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Не удалось выполнить MyBrowserPool.Dispose()");
+                Console.WriteLine(e);
+            }
         }
     }
 }
