@@ -6,6 +6,7 @@ using VacationTests.Infrastructure.PageElements;
 
 namespace VacationTests.PageElements
 {
+    [InjectControlsAttribute]
     public class AdminClaimItem : ControlBase
     {
         public AdminClaimItem(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy)

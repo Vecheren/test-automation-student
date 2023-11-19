@@ -4,6 +4,7 @@ using VacationTests.Infrastructure.PageElements;
 
 namespace VacationTests.PageElements
 {
+    [InjectControlsAttribute]
     public class DirectorItem : ControlBase
     {
         public DirectorItem(IContextBy contextBy) : base(contextBy)

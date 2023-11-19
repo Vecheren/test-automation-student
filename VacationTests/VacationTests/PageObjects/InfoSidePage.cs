@@ -6,6 +6,7 @@ using VacationTests.Infrastructure.PageElements;
 
 namespace VacationTests.PageObjects
 {
+    [InjectControlsAttribute]
     public class InfoSidePage : PageBase
     {
         // Lazy<T> – ещё один вариант работы с элементами, которых надо искать лениво

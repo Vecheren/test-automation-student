@@ -7,19 +7,16 @@ using VacationTests.PageElements;
 // О наследовании https://ulearn.me/course/basicprogramming/Nasledovanie_ac2b8cb6-8d63-4b81-9083-eaa77ab0c89c
 namespace VacationTests.PageObjects
 {
+    [InjectControlsAttribute]
     public class LoginPage : PageBase, ILoadable
     {
         public LoginPage(IWebDriver webDriver) : base(webDriver)
         {
         }
-
-        [ByTid("TitleLabel")]
+        
         public Label TitleLabel { get; private set; }
-        [ByTid("LoginAsEmployeeButton")]
         public Button LoginAsEmployeeButton { get; private set; }
-        [ByTid("LoginAsAdminButton")]
         public Button LoginAsAdminButton { get; private set; }
-        [ByTid("Footer")]
         public PageFooter Footer { get; private set; }
 
         public AdminVacationListPage LoginAsAdmin()

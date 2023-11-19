@@ -6,6 +6,7 @@ using VacationTests.PageElements;
 
 namespace VacationTests.PageObjects
 {
+    [InjectControlsAttribute]
     public class AdminVacationListPage : PageBase
     {
         private ControlFactory controlFactory;
