@@ -15,6 +15,6 @@ namespace VacationTests.PageElements
         {
         }
 
-        [ByTid("ComboBoxMenu__item")]public new ElementsCollection<DirectorItem> MenuItems { get; private set; }
+        [ByTid("ComboBoxMenu__item")] public new ElementsCollection<DirectorItem> MenuItems { get; private set; }
     }
 }

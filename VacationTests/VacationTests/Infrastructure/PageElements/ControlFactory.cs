@@ -8,6 +8,7 @@ using Kontur.Selone.Pages;
 using Kontur.Selone.Selectors;
 using Kontur.Selone.Selectors.Context;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -19,11 +20,27 @@ namespace VacationTests.Infrastructure.PageElements
     {
         private readonly object[] dependencies;
 
+
+
+
+        // Завис в этом задании 
+        // Как я размышлял:
+        // Задача: для определенных классов (помеченных атрибутом) автоматически инициализировать свойства страниц, контролов и коллекций контролов
+        // Другими словами: эти классы не должны обращаться к ControlFactory, ControlFactory сама к ним придет и проинициализирует
+        // Значит, мы должны:
+        // 0. Убрать всё ручное создание контролов в классах помеченных атрибутом + сделать все нужные свойства get; private set;
+        // 1. Найти все классы помеченные атрибутом (через рефлексию)
+        // 2. Найти все свойства в этих классах, которые являются страницами, контролами и коллекциями контролов (через рефлексию)
+        // 3. Проинициализировать эти страницы, контролы и коллекции контролов (через соответствующие методы Create... в ControlFactory)
+        // 4. Вызвать всю эту штуку автоматически при запуске тестов и до поиска первого элемента (непосредственно при создании ControlFactory)
+        // Как все это связано с формулировками и подсказками в задании - вообще не понимаю :) 
+        // Если мы просто сделаем п. 0 и что-то поправим в CreateInstance - кто будет выполнять остальные 4 пункта?
+
+        
         public ControlFactory(params object[] dependencies)
         {
             this.dependencies = dependencies;
-            var webDriver = (IWebDriver)dependencies.Single(x => x.GetType().Name.ToLower().Contains("driver"));
-
+            
             var assembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.FullName.Split(",").First() == "VacationTests");
             var types = assembly.DefinedTypes
@@ -31,27 +48,36 @@ namespace VacationTests.Infrastructure.PageElements
                     .Select(y => y.GetType())
                     .Any(z => z.Name == "InjectControlsAttribute"));
             
+            var webDriver = (IWebDriver)dependencies.Single(x => x.GetType().Name.ToLower().Contains("driver"));
             foreach (var control in types)
             {
                 var contextBy = webDriver.Search(x => x.WithTid(nameof(control)));
-                CreateInstance(control, contextBy, this.dependencies);
-
-                // if (control.BaseType.Name == "PageBase")
-                // {
-                //     this.CreatePage<IPage>(webDriver);
-                // }
-                // else if (control.BaseType.Name == "ControlBase")
-                // {
-                //     
-                // }
-                // else
-                // {
-                //     
-                // }
+                if (control.BaseType.Name == "PageBase")
+                {
+                    // Нельзя так взять и вставить тип в качестве generic в стиле CreatePage<control>(webDriver)
+                    var method = typeof(ControlFactory).GetMethod("CreatePage").MakeGenericMethod(control);
+                    object[] args = { webDriver };
+                    method.Invoke(this, args);
+                }
+                else if (control.BaseType.Name == "ControlBase")
+                {
+                    if (nameof(control).Contains("ElementsCollection"))
+                    {
+                        // var method = typeof(ControlFactory).GetMethod("CreateElementsCollection").MakeGenericMethod(control);
+                        // Нужен аргумент с поиском элемента
+                        // object[] args = { contextBy.SearchContext, };
+                        // method.Invoke(this, args);
+                    }
+                    else
+                    {
+                        var method = typeof(ControlFactory).GetMethod("CreateControl").MakeGenericMethod(control);
+                        object[] args = { contextBy };
+                        method.Invoke(this, args);
+                    }
+                }
             }
         }
-
-
+        
         /// <summary>Создать контрол типа TPageElement</summary>
         /// <typeparam name="TPageElement">Должен содержать конструктор, принимающий IWebDriver</typeparam>
         public TPageElement CreateControl<TPageElement>(IContextBy contextBy)
@@ -77,6 +103,7 @@ namespace VacationTests.Infrastructure.PageElements
 
         private static object CreateInstance(Type controlType, IContextBy contextBy, object[] dependencies)
         {
+            Console.WriteLine("В методе CreateInstanse создаем " + controlType.FullName);
             // У объекта, который хотим создать, проверяем, что конструктор есть и он один
             var constructors = controlType.GetConstructors();
             if (constructors.Length != 1)

@@ -8,12 +8,10 @@ namespace VacationTests.PageElements
 {
     public class AdminClaimList : ControlBase
     {
-        public ElementsCollection<AdminClaimItem> ClaimItems;
+        [ByTid("ClaimItem")] public ElementsCollection<AdminClaimItem> ClaimItems { get; private set; }
 
-        public AdminClaimList(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy)
+        public AdminClaimList(IContextBy contextBy) : base(contextBy)
         {
-            ClaimItems = controlFactory.CreateElementsCollection<AdminClaimItem>(Container,
-                x => x.WithTid("ClaimItem").FixedByIndex());
         }
     }
 }
