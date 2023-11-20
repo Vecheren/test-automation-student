@@ -11,7 +11,7 @@ public class Ulern_Test
     {
         // должен использоваться общий токен
         var container = new ServiceCollection()
-            .AddScoped<Token>()
+            .AddSingleton<Token>()
             .AddScoped<ConsoleTokenWriter1>()
             .AddScoped<ConsoleTokenWriter2>()
             .BuildServiceProvider();
@@ -48,11 +48,11 @@ public class Ulern_Test
 
         Assert.Multiple(() =>
             {
-                Assert.AreEqual(instance_1_1, instance_2_1,
+                Assert.AreNotEqual(instance_1_1.TokenInfo, instance_2_1.TokenInfo,
                     "в разных СКОУПАХ для 1 сервиса должны быть разные токены, т.к. токен добавлен через AddScoped");
-                Assert.AreEqual(instance_2_1, instance_2_2,
+                Assert.AreEqual(instance_2_1.TokenInfo, instance_2_2.TokenInfo,
                     "для разных сервисах внутри общего скоупа должен быть общий токен, т.к. токен добавлен через AddScoped");
-                Assert.AreEqual(instance_1_1, instance_2_2,
+                Assert.AreNotEqual(instance_1_1.TokenInfo, instance_2_2.TokenInfo,
                     "для разных сервисах внутри разных скоупов должны быть разные токены, т.к. токен добавлен через AddScoped");
                 Assert.AreEqual(instanceDoubleToken.Token1, instanceDoubleToken.Token2,
                     "Для сервиса принимаеющего на вход 2 токена должен использоваться 1 общий из скоупа");
@@ -81,13 +81,13 @@ public class Ulern_Test
 
         Assert.Multiple(() =>
             {
-                Assert.AreEqual(instance_1_1, instance_2_1,
+                Assert.AreNotEqual(instance_1_1.TokenInfo, instance_2_1.TokenInfo,
                     "в разных СКОУПАХ для 1 сервиса должны быть разные токены, т.к. токен добавлен через AddTransient");
-                Assert.AreEqual(instance_2_1, instance_2_2,
+                Assert.AreNotEqual(instance_2_1.TokenInfo, instance_2_2.TokenInfo,
                     "для разных сервисах внутри общего скоупа должены быть разные токены, т.к. токен добавлен через AddTransient");
-                Assert.AreEqual(instance_1_1, instance_2_2,
+                Assert.AreNotEqual(instance_1_1.TokenInfo, instance_2_2.TokenInfo,
                     "для разных сервисах внутри разных скоупов должны быть разные токены, т.к. токен добавлен через AddTransient");
-                Assert.AreEqual(instanceDoubleToken.Token1, instanceDoubleToken.Token2,
+                Assert.AreNotEqual(instanceDoubleToken.Token1, instanceDoubleToken.Token2,
                     "Для сервиса принимаеющего на вход 2 токена должены сгенерироваться 2 разных токена");
             }
         );
