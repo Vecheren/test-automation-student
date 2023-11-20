@@ -1,6 +1,4 @@
-﻿using Kontur.Selone.Extensions;
-using Kontur.Selone.Selectors.Context;
-using OpenQA.Selenium;
+﻿using Kontur.Selone.Selectors.Context;
 using VacationTests.Infrastructure;
 using VacationTests.Infrastructure.PageElements;
 
@@ -11,19 +9,12 @@ namespace VacationTests.PageElements
     {
         public AdminClaimItem(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy)
         {
-            TitleLink = controlFactory.CreateControl<Button>(Container.Search(x => x.WithTid(nameof(TitleLink))));
-            PeriodLabel = controlFactory.CreateControl<Label>(Container.Search(x => x.WithTid(nameof(PeriodLabel))));
-            StatusLabel = controlFactory.CreateControl<Label>(Container.Search(x => x.WithTid(nameof(StatusLabel))));
-            AcceptButton = controlFactory.CreateControl<Button>(Container.Search(x => x.WithTid(nameof(AcceptButton))));
-            RejectButton = controlFactory.CreateControl<Button>(Container.Search(x => x.WithTid(nameof(RejectButton))));
         }
-            
-        public Button TitleLink;
-        public Label PeriodLabel;
-        public Label StatusLabel;
-        public Button AcceptButton;
-        public Button RejectButton;
 
+        public Button TitleLink { get; private set; }
+        public Label PeriodLabel { get; private set; }
+        public Label StatusLabel { get; private set; }
+        public Button AcceptButton { get; private set; }
+        public Button RejectButton { get; private set; }
     }
-
 }

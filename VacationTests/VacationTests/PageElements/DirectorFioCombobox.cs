@@ -13,10 +13,8 @@ namespace VacationTests.PageElements
     {
         public DirectorFioCombobox(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy, controlFactory)
         {
-            MenuItems = controlFactory.CreateElementsCollection<DirectorItem>(Container.Root(),
-                x => x.WithTid("ComboBoxMenu__item").FixedByIndex());
         }
 
-        public new ElementsCollection<DirectorItem> MenuItems { get; private set; }
+        [ByTid("ComboBoxMenu__item")]public new ElementsCollection<DirectorItem> MenuItems { get; private set; }
     }
 }

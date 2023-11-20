@@ -9,43 +9,33 @@ namespace VacationTests.PageObjects
     [InjectControlsAttribute]
     public class ClaimLightbox : PageBase
     {
-        private readonly ControlFactory controlFactory;
-
-        public ClaimLightbox(IWebDriver webDriver, ControlFactory controlFactory) : base(webDriver)
+        public ClaimLightbox(IWebDriver webDriver) : base(webDriver)
         {
-            this.controlFactory = controlFactory;
         }
 
         public Portal ClaimModal { get; private set; }
 
         // Вариант работы с элементами, для которых нужен ленивый поиск
-        public Label ModalHeaderLabel => CreateControlByTid<Label>("ModalHeader");
+        public Label ModalHeader { get; private set; }
+        
+        public Label StatusLabel { get; private set; }
 
-        public Button CrossButton => CreateControlByTid<Button>("modal-close");
+        public Label ClaimTypeLabel { get; private set; }
 
-        public Label StatusLabel => CreateControlByTid<Label>("StatusLabel");
+        public Label ChildAgeLabel { get; private set; }
 
-        public Label ClaimTypeLabel => CreateControlByTid<Label>("ClaimTypeLabel");
+        public Label PeriodLabel { get; private set; }
 
-        public Label ChildAgeLabel => CreateControlByTid<Label>("ChildAgeLabel");
+        public Label AvailableDaysMessageLabel { get; private set; }
 
-        public Label PeriodLabel => CreateControlByTid<Label>("PeriodLabel");
+        public Label AvailableDaysLabel { get; private set; }
 
-        public Label AvailableDaysMessageLabel => CreateControlByTid<Label>("AvailableDaysMessageLabel");
+        public Checkbox PayNowCheckbox { get; private set; }
 
-        public Label AvailableDaysLabel => CreateControlByTid<Label>("AvailableDaysLabel");
+        public Label DirectorFioLabel { get; private set; }
 
-        public Checkbox PayNowCheckbox => CreateControlByTid<Checkbox>("PayNowCheckbox");
-
-        public Label DirectorFioLabel => CreateControlByTid<Label>("DirectorFioLabel");
-
-        public ClaimLightboxFooter Footer => CreateControlByTid<ClaimLightboxFooter>("ModalFooter");
-
-        private TControl CreateControlByTid<TControl>(string tid)
-        {
-            return controlFactory.CreateControl<TControl>(GetModalContext().Search(x => x.WithTid(tid)));
-        }
-
+        public ClaimLightboxFooter Footer { get; private set; }
+        
         private IWebElement GetModalContext()
         {
             return ClaimModal.GetPortalElement();
