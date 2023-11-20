@@ -2,10 +2,13 @@
 using System.Collections.Concurrent;
 using DiExample.Selenium;
 using DiExample.Selenium.Page;
+using Kontur.Selone.Extensions;
+using Kontur.Selone.WebDrivers;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using VacationTests.Infrastructure;
 
 namespace DiExample
 {
@@ -18,7 +21,11 @@ namespace DiExample
             serviceCollection.AddScoped<IBrowser, Browser>();
             serviceCollection.AddScoped<IWebDriver, ChromeDriver>();
             serviceCollection.AddSingleton<IPageFactory, PageFactory>();
-            
+            serviceCollection.AddSingleton<IWebDriverPool, WebDriverPool>();
+            serviceCollection.AddSingleton<IWebDriverFactory, ChromeDriverFactory>();
+            serviceCollection.AddSingleton<IWebDriverCleaner>(_ => new DelegateWebDriverCleaner(x => x.ResetWindows()));
+            serviceCollection.AddScoped<IPooledWebDriver>(s => s.GetRequiredService<IWebDriverPool>().AcquireWrapper());
+                
             ServiceProvider = serviceCollection.BuildServiceProvider();
             return ServiceProvider;
         }
