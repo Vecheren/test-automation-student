@@ -7,7 +7,7 @@ namespace VacationTests.PageElements
     [InjectControlsAttribute]
     public class AdminClaimItem : ControlBase
     {
-        public AdminClaimItem(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy)
+        public AdminClaimItem(IContextBy contextBy) : base(contextBy)
         {
         }
 

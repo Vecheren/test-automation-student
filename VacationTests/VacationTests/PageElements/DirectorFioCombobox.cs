@@ -8,11 +8,12 @@ using VacationTests.Infrastructure.PageElements;
 
 namespace VacationTests.PageElements
 {
-    [InjectControlsAttribute]
+    // [InjectControlsAttribute]
     public class DirectorFioCombobox : Combobox
     {
         public DirectorFioCombobox(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy, controlFactory)
         {
+            MenuItems = controlFactory.CreateElementsCollection<DirectorItem>(Container.Root(), x => x.WithTid("ComboBoxMenu__item").FixedByIndex());
         }
 
         [ByTid("ComboBoxMenu__item")] public new ElementsCollection<DirectorItem> MenuItems { get; private set; }

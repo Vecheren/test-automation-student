@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Kontur.Selone.Elements;
@@ -7,6 +8,7 @@ using Kontur.Selone.Extensions;
 using Kontur.Selone.Pages;
 using Kontur.Selone.Selectors;
 using Kontur.Selone.Selectors.Context;
+using Kontur.Selone.Selectors.XPath;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using OpenQA.Selenium;
@@ -54,10 +56,11 @@ namespace VacationTests.Infrastructure.PageElements
                 var contextBy = webDriver.Search(x => x.WithTid(nameof(control)));
                 if (control.BaseType.Name == "PageBase")
                 {
-                    // Нельзя так взять и вставить тип в качестве generic в стиле CreatePage<control>(webDriver)
-                    var method = typeof(ControlFactory).GetMethod("CreatePage").MakeGenericMethod(control);
-                    object[] args = { webDriver };
-                    method.Invoke(this, args);
+                    CreateControl<PageBase>(contextBy);
+                    // // Нельзя так взять и вставить тип в качестве generic в стиле CreatePage<control>(webDriver)
+                    // var method = typeof(ControlFactory).GetMethod("CreatePage").MakeGenericMethod(control);
+                    // object[] args = { webDriver };
+                    // method.Invoke(this, args);
                 }
                 else if (control.BaseType.Name == "ControlBase")
                 {
@@ -67,12 +70,15 @@ namespace VacationTests.Infrastructure.PageElements
                         // Нужен аргумент с поиском элемента
                         // object[] args = { contextBy.SearchContext, };
                         // method.Invoke(this, args);
+                        // CreateElementsCollection<ControlBase>(contextBy.SearchContext,
+                        //     x => x.WithTid(nameof(control)).FixedByIndex());
                     }
                     else
                     {
-                        var method = typeof(ControlFactory).GetMethod("CreateControl").MakeGenericMethod(control);
-                        object[] args = { contextBy };
-                        method.Invoke(this, args);
+                        CreateControl<ControlBase>(contextBy);
+                        // var method = typeof(ControlFactory).GetMethod("CreateControl").MakeGenericMethod(new Type[]{control});
+                        // object[] args = { contextBy };
+                        // method.Invoke(this, args);
                     }
                 }
             }
