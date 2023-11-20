@@ -21,10 +21,7 @@ namespace VacationTests.Infrastructure.PageElements
     public class ControlFactory
     {
         private readonly object[] dependencies;
-
-
-
-
+        
         // Завис в этом задании 
         // Как я размышлял:
         // Задача: для определенных классов (помеченных атрибутом) автоматически инициализировать свойства страниц, контролов и коллекций контролов
@@ -43,45 +40,27 @@ namespace VacationTests.Infrastructure.PageElements
         {
             this.dependencies = dependencies;
             
-            var assembly = AppDomain.CurrentDomain.GetAssemblies()
-                .Single(x => x.FullName.Split(",").First() == "VacationTests");
-            var types = assembly.DefinedTypes
-                .Where(type => type.GetCustomAttributes()
-                    .Select(y => y.GetType())
-                    .Any(z => z.Name == "InjectControlsAttribute"));
-            
-            var webDriver = (IWebDriver)dependencies.Single(x => x.GetType().Name.ToLower().Contains("driver"));
-            foreach (var control in types)
-            {
-                var contextBy = webDriver.Search(x => x.WithTid(nameof(control)));
-                if (control.BaseType.Name == "PageBase")
-                {
-                    CreateControl<PageBase>(contextBy);
-                    // // Нельзя так взять и вставить тип в качестве generic в стиле CreatePage<control>(webDriver)
-                    // var method = typeof(ControlFactory).GetMethod("CreatePage").MakeGenericMethod(control);
-                    // object[] args = { webDriver };
-                    // method.Invoke(this, args);
-                }
-                else if (control.BaseType.Name == "ControlBase")
-                {
-                    if (nameof(control).Contains("ElementsCollection"))
-                    {
-                        // var method = typeof(ControlFactory).GetMethod("CreateElementsCollection").MakeGenericMethod(control);
-                        // Нужен аргумент с поиском элемента
-                        // object[] args = { contextBy.SearchContext, };
-                        // method.Invoke(this, args);
-                        // CreateElementsCollection<ControlBase>(contextBy.SearchContext,
-                        //     x => x.WithTid(nameof(control)).FixedByIndex());
-                    }
-                    else
-                    {
-                        CreateControl<ControlBase>(contextBy);
-                        // var method = typeof(ControlFactory).GetMethod("CreateControl").MakeGenericMethod(new Type[]{control});
-                        // object[] args = { contextBy };
-                        // method.Invoke(this, args);
-                    }
-                }
-            }
+            // var assembly = AppDomain.CurrentDomain.GetAssemblies()
+            //     .Single(x => x.FullName.Split(",").First() == "VacationTests");
+            // var types = assembly.DefinedTypes
+            //     .Where(type => type.GetCustomAttributes()
+            //         .Select(y => y.GetType())
+            //         .Any(z => z.Name == "InjectControlsAttribute"));
+            //
+            // var webDriver = (IWebDriver)dependencies.Single(x => x.GetType().Name.ToLower().Contains("driver"));
+            // foreach (var control in types)
+            // {
+            //     var contextBy = webDriver.Search(x => x.WithTid(nameof(control)));
+            //     if (control.BaseType.Name == "PageBase")
+            //     {
+            //         // здесь надо передать класс control, но компилятор ругается :(
+            //         CreateControl<PageBase>(contextBy);
+            //     }
+            //     else if (control.BaseType.Name == "ControlBase")
+            //     {
+            //         // CreateControl<ControlBase>(contextBy);
+            //     }
+            // }
         }
         
         /// <summary>Создать контрол типа TPageElement</summary>
@@ -133,6 +112,7 @@ namespace VacationTests.Infrastructure.PageElements
             var value = constructor.Invoke(args.ToArray());
 
             // Получаем контекст, по которому будем искать все контролы, входящие в состав нашего объекта
+            // Здесь тест падает на SingleOrDefault
             var searchContext = contextBy?.SearchContext.SearchElement(contextBy.By) ??
                                 dependencies.OfType<ISearchContext>().SingleOrDefault();
             if (searchContext == null)

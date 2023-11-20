@@ -25,7 +25,7 @@ namespace VacationTests.PageNavigation
         {
             return OpenEmployeeVacationListPage().SalaryCalculatorTab.ClickAndOpen<AverageDailyEarningsCalculatorPage>();
         }
-
+        
         public EmployeeVacationListPage OpenEmployeeVacationListPage(string employeeId = "1")
         {
             var isCurrentPageIsEmployeePage = webDriver.Url.Contains("user");
