@@ -22,8 +22,10 @@ namespace VacationTests.Infrastructure.PageElements
     {
         private readonly object[] dependencies;
         
-        // Завис в этом задании 
-        // Как я размышлял:
+        // UPD: В итоге понял, что нужен ифчик при создании объекта 
+        
+        // Изначально неправильно понял и решил всю инициализацию запускать прям отсюда
+        // Рассуждал так: 
         // Задача: для определенных классов (помеченных атрибутом) автоматически инициализировать свойства страниц, контролов и коллекций контролов
         // Другими словами: эти классы не должны обращаться к ControlFactory, ControlFactory сама к ним придет и проинициализирует
         // Значит, мы должны:
@@ -120,7 +122,13 @@ namespace VacationTests.Infrastructure.PageElements
                     "Для автоматической инициализации полей контрола должен быть известен ISearchContext. " +
                     "Либо укажите IContextBy, либо передайте в зависимости WebDriver.");
             // Инициализируем контролы объекта
-            InitializePropertiesWithControls(value, searchContext, dependencies);
+            
+            if (controlType.GetCustomAttributes().Select(y => y.GetType())
+                .Any(z => z.Name == "InjectControlsAttribute"))
+            {
+                Console.WriteLine("контрол с нашим атрибутом: " + controlType.FullName);
+                InitializePropertiesWithControls(value, searchContext, dependencies);
+            }
 
             // Возвращаем экземпляр объекта
             return value;

@@ -8,7 +8,7 @@ using VacationTests.Infrastructure.PageElements;
 
 namespace VacationTests.PageElements
 {
-    // [InjectControlsAttribute]
+    [InjectControlsAttribute]
     public class DirectorFioCombobox : Combobox
     {
         public DirectorFioCombobox(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy, controlFactory)

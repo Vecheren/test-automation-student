@@ -10,7 +10,7 @@ namespace VacationTests.PageElements
     [InjectControlsAttribute]
     public class EmployeeClaimItem : ControlBase
     {
-        public EmployeeClaimItem(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy)
+        public EmployeeClaimItem(IContextBy contextBy) : base(contextBy)
         {
         }
 
