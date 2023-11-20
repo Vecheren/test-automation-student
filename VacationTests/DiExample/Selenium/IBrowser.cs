@@ -49,9 +49,9 @@ namespace DiExample.Selenium
     }
 }
 
-// [SetUpFixture]
-// public class BrowserDisposer
-// {
-//     [OneTimeTearDown]
-//     public void Dispose() => Browser.Dispose();
-// }
+[SetUpFixture]
+public class BrowserDisposer
+{
+    [OneTimeTearDown]
+    public void Dispose() => Browser.Dispose();
+}
