@@ -34,7 +34,7 @@ namespace VacationTests.PageObjects
 
         public Label DirectorFioLabel { get; private set; }
 
-        public ClaimLightboxFooter Footer { get; private set; }
+        [ByTid("ModalFooter")] public ClaimLightboxFooter Footer { get; private set; }
         
         private IWebElement GetModalContext()
         {

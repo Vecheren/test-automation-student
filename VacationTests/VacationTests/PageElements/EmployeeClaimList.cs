@@ -10,10 +10,12 @@ namespace VacationTests.PageElements
     // Класс списка наследуем от ControlBase, поскольку это тоже контрол и могут понадобиться базовые методы и пропсы
     public class EmployeeClaimList : ControlBase
     {
-        public EmployeeClaimList(IContextBy contextBy) : base(contextBy)
+        public EmployeeClaimList(IContextBy contextBy, ControlFactory controlFactory) : base(contextBy)
         {
+            Items = controlFactory.CreateElementsCollection<EmployeeClaimItem>(Container,
+                 x => x.WithTid("ClaimItem").FixedByIndex());
         }
 
-        [ByTid("ClaimItem")] public ElementsCollection<EmployeeClaimItem> Items { get; private set; }
+        public ElementsCollection<EmployeeClaimItem> Items { get; private set; }
     }
 }

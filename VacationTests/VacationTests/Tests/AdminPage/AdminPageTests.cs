@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Xml.Schema;
 using FluentAssertions;
 using Kontur.RetryableAssertions.Extensions;
@@ -103,7 +104,7 @@ namespace VacationTests.Tests.AdminPage
                 {
                     (claim.Status.GetDescription(),
                         claim.Type.GetDescription(),
-                        (claim.StartDate, claim.EndDate).ToString(" — "),
+                        (claim.StartDate, claim.EndDate).ToString(" - "),
                         claim.Director.Name)
                 });
             }
