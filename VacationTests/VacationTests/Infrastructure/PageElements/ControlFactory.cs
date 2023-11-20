@@ -1,20 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Kontur.Selone.Elements;
 using Kontur.Selone.Extensions;
-using Kontur.Selone.Pages;
 using Kontur.Selone.Selectors;
 using Kontur.Selone.Selectors.Context;
-using Kontur.Selone.Selectors.XPath;
-using NUnit.Framework;
-using NUnit.Framework.Internal;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using VacationTests.PageObjects;
 
 namespace VacationTests.Infrastructure.PageElements
 {
@@ -22,47 +14,9 @@ namespace VacationTests.Infrastructure.PageElements
     {
         private readonly object[] dependencies;
         
-        // UPD: В итоге понял, что нужен ифчик при создании объекта 
-        
-        // Изначально неправильно понял и решил всю инициализацию запускать прям отсюда
-        // Рассуждал так: 
-        // Задача: для определенных классов (помеченных атрибутом) автоматически инициализировать свойства страниц, контролов и коллекций контролов
-        // Другими словами: эти классы не должны обращаться к ControlFactory, ControlFactory сама к ним придет и проинициализирует
-        // Значит, мы должны:
-        // 0. Убрать всё ручное создание контролов в классах помеченных атрибутом + сделать все нужные свойства get; private set;
-        // 1. Найти все классы помеченные атрибутом (через рефлексию)
-        // 2. Найти все свойства в этих классах, которые являются страницами, контролами и коллекциями контролов (через рефлексию)
-        // 3. Проинициализировать эти страницы, контролы и коллекции контролов (через соответствующие методы Create... в ControlFactory)
-        // 4. Вызвать всю эту штуку автоматически при запуске тестов и до поиска первого элемента (непосредственно при создании ControlFactory)
-        // Как все это связано с формулировками и подсказками в задании - вообще не понимаю :) 
-        // Если мы просто сделаем п. 0 и что-то поправим в CreateInstance - кто будет выполнять остальные 4 пункта?
-
-        
         public ControlFactory(params object[] dependencies)
         {
             this.dependencies = dependencies;
-            
-            // var assembly = AppDomain.CurrentDomain.GetAssemblies()
-            //     .Single(x => x.FullName.Split(",").First() == "VacationTests");
-            // var types = assembly.DefinedTypes
-            //     .Where(type => type.GetCustomAttributes()
-            //         .Select(y => y.GetType())
-            //         .Any(z => z.Name == "InjectControlsAttribute"));
-            //
-            // var webDriver = (IWebDriver)dependencies.Single(x => x.GetType().Name.ToLower().Contains("driver"));
-            // foreach (var control in types)
-            // {
-            //     var contextBy = webDriver.Search(x => x.WithTid(nameof(control)));
-            //     if (control.BaseType.Name == "PageBase")
-            //     {
-            //         // здесь надо передать класс control, но компилятор ругается :(
-            //         CreateControl<PageBase>(contextBy);
-            //     }
-            //     else if (control.BaseType.Name == "ControlBase")
-            //     {
-            //         // CreateControl<ControlBase>(contextBy);
-            //     }
-            // }
         }
         
         /// <summary>Создать контрол типа TPageElement</summary>
@@ -122,15 +76,16 @@ namespace VacationTests.Infrastructure.PageElements
                     "Для автоматической инициализации полей контрола должен быть известен ISearchContext. " +
                     "Либо укажите IContextBy, либо передайте в зависимости WebDriver.");
             // Инициализируем контролы объекта
-            
-            if (controlType.GetCustomAttributes().Select(y => y.GetType())
-                .Any(z => z.Name == "InjectControlsAttribute"))
+
+            var controlNeedInjection = controlType
+                .GetCustomAttributes()
+                .Select(y => y.GetType())
+                .Any(z => z.Name == "InjectControlsAttribute");
+            if (controlNeedInjection)
             {
-                Console.WriteLine("контрол с нашим атрибутом: " + controlType.FullName);
                 InitializePropertiesWithControls(value, searchContext, dependencies);
             }
 
-            // Возвращаем экземпляр объекта
             return value;
         }
 
