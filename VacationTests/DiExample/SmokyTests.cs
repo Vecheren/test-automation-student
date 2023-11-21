@@ -1,5 +1,4 @@
-﻿using System;
-using DiExample.PageObjects.Pages;
+﻿using DiExample.PageObjects.Pages;
 using DiExample.Selenium;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

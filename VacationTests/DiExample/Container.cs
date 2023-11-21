@@ -7,7 +7,6 @@ using Kontur.Selone.WebDrivers;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 
 namespace DiExample
@@ -24,7 +23,7 @@ namespace DiExample
             serviceCollection.AddSingleton<IWebDriverPool, WebDriverPool>();
             serviceCollection.AddSingleton<IWebDriverFactory, FirefoxDriverFactory>();
             serviceCollection.AddSingleton<IWebDriverCleaner>(_ => new DelegateWebDriverCleaner(x => x.ResetWindows()));
-            serviceCollection.AddScoped<IPooledWebDriver>(s => s.GetRequiredService<IWebDriverPool>().AcquireWrapper());
+            serviceCollection.AddScoped(s => s.GetRequiredService<IWebDriverPool>().AcquireWrapper());
                 
             ServiceProvider = serviceCollection.BuildServiceProvider();
             return ServiceProvider;
