@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using VacationTests.Infrastructure;
+using OpenQA.Selenium.Firefox;
 
 namespace DiExample
 {
@@ -19,10 +19,10 @@ namespace DiExample
             var serviceCollection = new ServiceCollection();
 
             serviceCollection.AddScoped<IBrowser, Browser>();
-            serviceCollection.AddScoped<IWebDriver, ChromeDriver>();
+            serviceCollection.AddScoped<IWebDriver, FirefoxDriver>();
             serviceCollection.AddSingleton<IPageFactory, PageFactory>();
             serviceCollection.AddSingleton<IWebDriverPool, WebDriverPool>();
-            serviceCollection.AddSingleton<IWebDriverFactory, ChromeDriverFactory>();
+            serviceCollection.AddSingleton<IWebDriverFactory, FirefoxDriverFactory>();
             serviceCollection.AddSingleton<IWebDriverCleaner>(_ => new DelegateWebDriverCleaner(x => x.ResetWindows()));
             serviceCollection.AddScoped<IPooledWebDriver>(s => s.GetRequiredService<IWebDriverPool>().AcquireWrapper());
                 
