@@ -12,7 +12,6 @@ namespace VacationTests.Infrastructure
         {
             var firefoxDriverService = FirefoxDriverService.CreateDefaultService(AppDomain.CurrentDomain.BaseDirectory);
             var options = new FirefoxOptions();
-            options.AddArguments("--start-maximized", "--disable-extensions");
             var firefoxDriver = new FirefoxDriver(firefoxDriverService, options, TimeSpan.FromSeconds(180));
             firefoxDriver.Manage().Window.SetSize(1280, 960);
             return firefoxDriver;
