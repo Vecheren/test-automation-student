@@ -13,12 +13,12 @@ namespace VacationTests.Infrastructure.PageElements
     public class ControlFactory
     {
         private readonly object[] dependencies;
-        
+
         public ControlFactory(params object[] dependencies)
         {
             this.dependencies = dependencies;
         }
-        
+
         /// <summary>Создать контрол типа TPageElement</summary>
         /// <typeparam name="TPageElement">Должен содержать конструктор, принимающий IWebDriver</typeparam>
         public TPageElement CreateControl<TPageElement>(IContextBy contextBy)
@@ -44,7 +44,6 @@ namespace VacationTests.Infrastructure.PageElements
 
         private static object CreateInstance(Type controlType, IContextBy contextBy, object[] dependencies)
         {
-            Console.WriteLine("В методе CreateInstanse создаем " + controlType.FullName);
             // У объекта, который хотим создать, проверяем, что конструктор есть и он один
             var constructors = controlType.GetConstructors();
             if (constructors.Length != 1)
@@ -66,23 +65,15 @@ namespace VacationTests.Infrastructure.PageElements
 
             // Вызываем конструктор и передаём ему все входные параметры
             var value = constructor.Invoke(args.ToArray());
-
-            // Получаем контекст, по которому будем искать все контролы, входящие в состав нашего объекта
-            // Здесь тест падает на SingleOrDefault
-            var searchContext = contextBy?.SearchContext.SearchElement(contextBy.By) ??
-                                dependencies.OfType<ISearchContext>().SingleOrDefault();
-            if (searchContext == null)
-                throw new NotSupportedException(
-                    "Для автоматической инициализации полей контрола должен быть известен ISearchContext. " +
-                    "Либо укажите IContextBy, либо передайте в зависимости WebDriver.");
-            // Инициализируем контролы объекта
-
-            var controlNeedInjection = controlType
-                .GetCustomAttributes()
-                .Select(y => y.GetType())
-                .Any(z => z.Name == "InjectControlsAttribute");
+            var controlNeedInjection = controlType.GetCustomAttribute<InjectControlsAttribute>(true) != null;
             if (controlNeedInjection)
             {
+                var searchContext = contextBy?.SearchContext.SearchElement(contextBy.By) ??
+                                    dependencies.OfType<ISearchContext>().SingleOrDefault();
+                if (searchContext == null)
+                    throw new NotSupportedException(
+                        "Для автоматической инициализации полей контрола должен быть известен ISearchContext. " +
+                        "Либо укажите IContextBy, либо передайте в зависимости WebDriver.");
                 InitializePropertiesWithControls(value, searchContext, dependencies);
             }
 
