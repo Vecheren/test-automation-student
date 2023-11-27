@@ -26,38 +26,20 @@ namespace VacationTests
         [TearDown]
         public void TearDown()
         {
-            try
-            {
-                ClaimStorage.ClearClaims();
-                Screenshoter.SaveTestFailureScreenshot();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            try
-            {
-                MyBrowserPool.Release();
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            ClaimStorage.ClearClaims();
+            Screenshoter.SaveTestFailureScreenshot();
+            MyBrowserPool.Release();
         }
-
+    }
+    
+    
+    [SetUpFixture]
+    public class BrowserDisposer
+    {
         [OneTimeTearDown]
-        protected void OneTimeTearDown()
+        public void OneTimeTearDown()
         {
-            try
-            {
-                MyBrowserPool.Dispose();
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Не удалось выполнить MyBrowserPool.Dispose()");
-                Console.WriteLine(e);
-            }
+            MyBrowserPool.Dispose();
         }
     }
 }
