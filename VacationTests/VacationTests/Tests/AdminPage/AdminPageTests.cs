@@ -58,58 +58,61 @@ namespace VacationTests.Tests.AdminPage
                 .Wait()
                 .EquivalentTo(new[]
                 {
-                    ("Заявление " + claims[0].Id, false, false), 
-                    ("Заявление " + claims[1].Id, false, false), 
+                    ("Заявление " + claims[0].Id, false, false),
+                    ("Заявление " + claims[1].Id, false, false),
                     ("Заявление " + claims[2].Id, true, true)
                 });
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void ClaimContent_OnClaimList_ShouldBeCorrect(bool checkOnList)
+
+        [Test]
+        public void ClaimContent_OnClaimList_ShouldBeCorrect()
         {
             var adminVacationPage = Navigation.OpenAdminVacationListPage();
             var claim = new ClaimBuilder().Build();
             ClaimStorage.Add(new[] { claim });
             adminVacationPage.Refresh();
             var claimItem = adminVacationPage.ClaimList.ClaimItems.Single();
+            new[]
+            {
+                Props.Create(claimItem.TitleLink.Text,
+                    claimItem.PeriodLabel.Text,
+                    claimItem.StatusLabel.Text,
+                    claimItem.AcceptButton.Visible,
+                    claimItem.RejectButton.Visible)
+            }.Wait().EqualTo(new[]
+            {
+                (
+                    "Заявление " + claim.Id,
+                    (claim.StartDate, claim.EndDate).ToString(" - "),
+                    claim.Status.GetDescription(),
+                    claim.Status == ClaimStatus.NonHandled,
+                    claim.Status == ClaimStatus.NonHandled)
+            });
+        }
 
-            if (checkOnList)
+        [Test]
+        public void ClaimContent_OnClaimLightBox_ShouldBeCorrect()
+        {
+            var adminVacationPage = Navigation.OpenAdminVacationListPage();
+            var claim = new ClaimBuilder().Build();
+            ClaimStorage.Add(new[] { claim });
+            adminVacationPage.Refresh();
+            var claimItem = adminVacationPage.ClaimList.ClaimItems.Single();
+            var claimLightbox = claimItem.TitleLink.ClickAndOpen<ClaimLightbox>();
+            new[]
             {
-                new[]
-                {
-                    Props.Create(claimItem.TitleLink.Text,
-                        claimItem.PeriodLabel.Text,
-                        claimItem.StatusLabel.Text,
-                        claimItem.AcceptButton.Visible,
-                        claimItem.RejectButton.Visible)
-                }.Wait().EqualTo(new[]
-                {
-                    (
-                        "Заявление " + claim.Id,
-                        (claim.StartDate, claim.EndDate).ToString(" - "),
-                        claim.Status.GetDescription(),
-                        claim.Status == ClaimStatus.NonHandled,
-                        claim.Status == ClaimStatus.NonHandled)
-                });
-            }
-            else
+                Props.Create(claimLightbox.StatusLabel.Text,
+                    claimLightbox.ClaimTypeLabel.Text,
+                    claimLightbox.PeriodLabel.Text,
+                    claimLightbox.DirectorFioLabel.Text)
+            }.Wait().EqualTo(new[]
             {
-                var claimLightbox = claimItem.TitleLink.ClickAndOpen<ClaimLightbox>();
-                new[]
-                {
-                    Props.Create(claimLightbox.StatusLabel.Text,
-                        claimLightbox.ClaimTypeLabel.Text,
-                        claimLightbox.PeriodLabel.Text,
-                        claimLightbox.DirectorFioLabel.Text)
-                }.Wait().EqualTo(new[]
-                {
-                    (claim.Status.GetDescription(),
-                        claim.Type.GetDescription(),
-                        (claim.StartDate, claim.EndDate).ToString(" - "),
-                        claim.Director.Name)
-                });
-            }
+                (claim.Status.GetDescription(),
+                    claim.Type.GetDescription(),
+                    (claim.StartDate, claim.EndDate).ToString(" - "),
+                    claim.Director.Name)
+            });
         }
 
         [TestCaseSource(nameof(ClaimLightBoxCases))]
@@ -143,13 +146,14 @@ namespace VacationTests.Tests.AdminPage
             var adminVacationPage = Navigation.OpenAdminVacationListPage();
             var claimBuilder = new ClaimBuilder();
             var claim = claimBuilder.WithPeriod(DateTime.Now.Date.AddDays(4), DateTime.Now.Date.AddDays(7)).Build();
-            var claim2 = claimBuilder.WithPeriod(DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(111)).Build();
+            var claim2 = claimBuilder.WithPeriod(DateTime.Now.Date.AddDays(100), DateTime.Now.Date.AddDays(111))
+                .Build();
             ClaimStorage.Add(new[] { claim, claim2 });
             adminVacationPage.Refresh();
 
-            adminVacationPage.ClaimList.ClaimItems.Select(claimItem => Props.Create(
-                    claimItem.TitleLink.Text))
-                .Wait().EqualTo(new[]
+            adminVacationPage.ClaimList.ClaimItems.Select(x => x.TitleLink.Text)
+                .Wait()
+                .EqualTo(new[]
                 {
                     "Заявление " + claim.Id,
                     "Заявление " + claim2.Id
@@ -171,34 +175,5 @@ namespace VacationTests.Tests.AdminPage
             yield return new TestCaseData(new Func<AdminClaimItem, Button>(x => x.RejectButton),
                 ClaimStatus.Rejected.GetDescription());
         }
-
-
-        // Работает, но переусложнено и подходит только для одного кейса :)
-        // private static IEnumerable<TestCaseData> ClaimContentCases()
-        // {
-        //     yield return new TestCaseData(new Func<AdminClaimItem, Props<string, string, string, bool, bool>[]>(
-        //             claimItem =>
-        //             {
-        //                 return new[]
-        //                 {
-        //                     Props.Create(claimItem.TitleLink.Text,
-        //                         claimItem.PeriodLabel.Text,
-        //                         claimItem.StatusLabel.Text,
-        //                         claimItem.AcceptButton.Visible,
-        //                         claimItem.RejectButton.Visible)
-        //                 };
-        //             }),
-        //         new Func<Claim2, IEnumerable<(string, string, string, bool, bool)>>(claim =>
-        //         {
-        //             return new[]
-        //             {
-        //                 ("Заявление " + claim.Id,
-        //                     (claim.StartDate, claim.EndDate).ToString(" - "),
-        //                     claim.Status.GetDescription(),
-        //                     claim.Status == ClaimStatus.NonHandled,
-        //                     claim.Status == ClaimStatus.NonHandled)
-        //             };
-        //         }));
-        // }
     }
 }
