@@ -109,32 +109,7 @@ namespace VacationTests.Tests.AdminPage
                     claim.Director.Name)
             });
         }
-
-        [TestCaseSource(nameof(ClaimLightBoxCases))]
-        public void ChangeClaimStatus_FromLightbox_ShouldSuccess(Func<ClaimLightbox, Button> getButton, string status)
-        {
-            var adminVacationPage = Navigation.OpenAdminVacationListPage();
-            var claim = new ClaimBuilder().Build();
-            ClaimStorage.Add(new[] { claim });
-            adminVacationPage.Refresh();
-            var claimLightbox = adminVacationPage.ClaimList.ClaimItems.Single().TitleLink.ClickAndOpen<ClaimLightbox>();
-            getButton(claimLightbox).ClickAndOpen<AdminVacationListPage>();
-            adminVacationPage.ClaimList.ClaimItems.Single().StatusLabel.Text.Wait().EqualTo(status);
-        }
-
-        [TestCaseSource(nameof(ClaimListCases))]
-        public void ChangeClaimStatus_FromList_ShouldSuccess(Func<AdminClaimItem, Button> getButton, string status)
-        {
-            var adminVacationPage = Navigation.OpenAdminVacationListPage();
-            var claim = new ClaimBuilder().Build();
-            ClaimStorage.Add(new[] { claim });
-            adminVacationPage.Refresh();
-
-            getButton(adminVacationPage.ClaimList.ClaimItems.Single()).Click();
-            adminVacationPage.ClaimList.ClaimItems.Single().StatusLabel.Text.Wait().EqualTo(status);
-        }
-
-
+        
         [Test]
         public void CreateClaims_CheckWithOrder_ShouldSuccess()
         {
@@ -154,6 +129,44 @@ namespace VacationTests.Tests.AdminPage
                     "Заявление " + claim2.Id
                 });
         }
+
+        [TestCaseSource(nameof(ClaimLightBoxCases))]
+        public void ChangeClaimStatus_FromLightbox_ShouldSuccess(Func<ClaimLightbox, Button> getButton, string status)
+        {
+            var adminVacationPage = Navigation.OpenAdminVacationListPage();
+            var claim = new ClaimBuilder().Build();
+            ClaimStorage.Add(new[] { claim });
+            adminVacationPage.Refresh();
+            
+            var claimItem = adminVacationPage.ClaimList.ClaimItems.Single();
+            
+            // Кликаем по заголовку
+            // Открываем ЛБ 
+            
+            var claimLightbox = claimItem.TitleLink.ClickAndOpen<ClaimLightbox>();
+            
+            // Кликаем по кнопке
+            getButton(claimLightbox).Click();
+            
+            adminVacationPage.ClaimList.ClaimItems.Single().StatusLabel.Text.Wait().EqualTo(status);
+        }
+
+        [TestCaseSource(nameof(ClaimListCases))]
+        public void ChangeClaimStatus_FromList_ShouldSuccess(Func<AdminClaimItem, Button> getButton, string status)
+        {
+            var adminVacationPage = Navigation.OpenAdminVacationListPage();
+            var claim = new ClaimBuilder().Build();
+            ClaimStorage.Add(new[] { claim });
+            adminVacationPage.Refresh();
+            
+            var claimItem = adminVacationPage.ClaimList.ClaimItems.Single();
+            
+            // Кликаем по кнопке
+            getButton(claimItem).Click();
+            
+            adminVacationPage.ClaimList.ClaimItems.Single().StatusLabel.Text.Wait().EqualTo(status);
+        }
+        
 
         private static IEnumerable<TestCaseData> ClaimLightBoxCases()
         {
