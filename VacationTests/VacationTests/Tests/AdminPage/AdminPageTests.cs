@@ -130,8 +130,8 @@ namespace VacationTests.Tests.AdminPage
                 });
         }
 
-        [TestCaseSource(nameof(ClaimLightBoxCases))]
-        public void ChangeClaimStatus_FromLightbox_ShouldSuccess(Func<ClaimLightbox, Button> getButton, string status)
+        [TestCaseSource(nameof(StatusCases))]
+        public void ChangeClaimStatus_ShouldSuccess(Func<AdminClaimItem, Button> getButton, string status)
         {
             var adminVacationPage = Navigation.OpenAdminVacationListPage();
             var claim = new ClaimBuilder().Build();
@@ -139,45 +139,25 @@ namespace VacationTests.Tests.AdminPage
             adminVacationPage.Refresh();
             
             var claimItem = adminVacationPage.ClaimList.ClaimItems.Single();
-            
-            // Кликаем по заголовку
-            // Открываем ЛБ 
-            
-            var claimLightbox = claimItem.TitleLink.ClickAndOpen<ClaimLightbox>();
-            
-            // Кликаем по кнопке
-            getButton(claimLightbox).Click();
-            
-            adminVacationPage.ClaimList.ClaimItems.Single().StatusLabel.Text.Wait().EqualTo(status);
-        }
-
-        [TestCaseSource(nameof(ClaimListCases))]
-        public void ChangeClaimStatus_FromList_ShouldSuccess(Func<AdminClaimItem, Button> getButton, string status)
-        {
-            var adminVacationPage = Navigation.OpenAdminVacationListPage();
-            var claim = new ClaimBuilder().Build();
-            ClaimStorage.Add(new[] { claim });
-            adminVacationPage.Refresh();
-            
-            var claimItem = adminVacationPage.ClaimList.ClaimItems.Single();
-            
-            // Кликаем по кнопке
             getButton(claimItem).Click();
             
             adminVacationPage.ClaimList.ClaimItems.Single().StatusLabel.Text.Wait().EqualTo(status);
         }
-        
 
-        private static IEnumerable<TestCaseData> ClaimLightBoxCases()
+        private static IEnumerable<TestCaseData> StatusCases()
         {
-            yield return new TestCaseData(new Func<ClaimLightbox, Button>(x => x.Footer.AcceptButton),
+            yield return new TestCaseData(new Func<AdminClaimItem, Button>(x =>
+                {
+                    var claimLightbox = x.TitleLink.ClickAndOpen<ClaimLightbox>();
+                    return claimLightbox.Footer.AcceptButton;
+                }),
                 ClaimStatus.Accepted.GetDescription());
-            yield return new TestCaseData(new Func<ClaimLightbox, Button>(x => x.Footer.RejectButton),
+            yield return new TestCaseData(new Func<AdminClaimItem, Button>(x =>
+                {
+                    var claimLightbox = x.TitleLink.ClickAndOpen<ClaimLightbox>();
+                    return claimLightbox.Footer.RejectButton;
+                }),
                 ClaimStatus.Rejected.GetDescription());
-        }
-
-        private static IEnumerable<TestCaseData> ClaimListCases()
-        {
             yield return new TestCaseData(new Func<AdminClaimItem, Button>(x => x.AcceptButton),
                 ClaimStatus.Accepted.GetDescription());
             yield return new TestCaseData(new Func<AdminClaimItem, Button>(x => x.RejectButton),
