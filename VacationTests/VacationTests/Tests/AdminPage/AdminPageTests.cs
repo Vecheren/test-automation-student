@@ -23,15 +23,11 @@ namespace VacationTests.Tests.AdminPage
         [Test]
         public void CreateClaims_FromUI_ShouldAddClaimsToAdminPage()
         {
-            var dates = new[]
-            {
-                (DateTime.Now.Date.AddDays(8), DateTime.Now.Date.AddDays(15)),
-                (DateTime.Now.Date.AddDays(10), DateTime.Now.Date.AddDays(20))
-            };
-            var vacationListPage = Navigation.OpenEmployeeVacationListPage();
-            Helper.CreateClaimFromUI(vacationListPage, ClaimType.Child, dates[0], 7);
+            var claimBuilder = new ClaimBuilder();
+            var vacationListPage = Navigation.OpenEmployeeVacationListPage("1");
+            Helper.CreateClaimFromUI(vacationListPage, claimBuilder.Build());
             vacationListPage = Navigation.OpenEmployeeVacationListPage("2");
-            Helper.CreateClaimFromUI(vacationListPage, ClaimType.Child, dates[1], 6);
+            Helper.CreateClaimFromUI(vacationListPage, claimBuilder.Build());
             var adminVacationListPage = Navigation.OpenAdminVacationListPage();
             adminVacationListPage.ClaimList.ClaimItems.Count.Wait().EqualTo(2);
         }
@@ -58,9 +54,14 @@ namespace VacationTests.Tests.AdminPage
             ClaimStorage.Add(claims);
             adminVacationListPage.Refresh();
             adminVacationListPage.ClaimList.ClaimItems
-                .Select(x => Props.Create(x.AcceptButton.Visible, x.RejectButton.Visible))
+                .Select(x => Props.Create(x.TitleLink.Text, x.AcceptButton.Visible, x.RejectButton.Visible))
                 .Wait()
-                .EquivalentTo(new[] { (true, true), (false, false), (false, false) });
+                .EquivalentTo(new[]
+                {
+                    ("Заявление " + claims[0].Id, false, false), 
+                    ("Заявление " + claims[1].Id, false, false), 
+                    ("Заявление " + claims[2].Id, true, true)
+                });
         }
 
         [TestCase(true)]
@@ -84,7 +85,8 @@ namespace VacationTests.Tests.AdminPage
                         claimItem.RejectButton.Visible)
                 }.Wait().EqualTo(new[]
                 {
-                    ("Заявление " + claim.Id,
+                    (
+                        "Заявление " + claim.Id,
                         (claim.StartDate, claim.EndDate).ToString(" - "),
                         claim.Status.GetDescription(),
                         claim.Status == ClaimStatus.NonHandled,
@@ -146,23 +148,11 @@ namespace VacationTests.Tests.AdminPage
             adminVacationPage.Refresh();
 
             adminVacationPage.ClaimList.ClaimItems.Select(claimItem => Props.Create(
-                    claimItem.TitleLink.Text,
-                    claimItem.PeriodLabel.Text,
-                    claimItem.StatusLabel.Text,
-                    claimItem.AcceptButton.Visible,
-                    claimItem.RejectButton.Visible))
+                    claimItem.TitleLink.Text))
                 .Wait().EqualTo(new[]
                 {
-                    ("Заявление " + claim.Id,
-                        (claim.StartDate, claim.EndDate).ToString(" - "),
-                        claim.Status.GetDescription(),
-                        claim.Status == ClaimStatus.NonHandled,
-                        claim.Status == ClaimStatus.NonHandled),
-                    ("Заявление " + claim2.Id,
-                        (claim2.StartDate, claim2.EndDate).ToString(" - "),
-                        claim2.Status.GetDescription(),
-                        claim2.Status == ClaimStatus.NonHandled,
-                        claim2.Status == ClaimStatus.NonHandled)
+                    "Заявление " + claim.Id,
+                    "Заявление " + claim2.Id
                 });
         }
 

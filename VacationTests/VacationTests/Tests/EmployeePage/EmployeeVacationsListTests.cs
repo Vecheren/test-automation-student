@@ -25,10 +25,14 @@ namespace VacationTests.Tests.EmployeePage
         [Test]
         public void CreateVacations_ShouldAddItemsToClaimsList()
         {
+            var claim = new ClaimBuilder()
+                .WithType(ClaimType.Child)
+                .WithChildAgeInMonths(6)
+                .Build();
+            
             var employeeVacationListPage = Init();
             ClaimStorage.Add(new[]{Claim.CreateChildType()});
-            var claim = Claim.CreateChildType();
-            Helper.CreateClaimFromUI(employeeVacationListPage, claim.Type, (claim.StartDate, claim.EndDate), claim.ChildAgeInMonths);
+            Helper.CreateClaimFromUI(employeeVacationListPage, claim);
             employeeVacationListPage.Refresh();
             
             employeeVacationListPage.ClaimList.Items.Count.Wait().EqualTo(2); 

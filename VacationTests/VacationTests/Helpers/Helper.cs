@@ -1,5 +1,4 @@
-﻿using System;
-using VacationTests.Claims;
+﻿using VacationTests.Claims;
 using VacationTests.Infrastructure;
 using VacationTests.Infrastructure.PageElements;
 using VacationTests.PageObjects;
@@ -8,23 +7,19 @@ namespace VacationTests.Helpers
 {
     public static class Helper
     {
-        public static void CreateClaimFromUI(EmployeeVacationListPage employeeVacationListPage,
-            ClaimType claimType,
-            (DateTime, DateTime) startAndEndDate,
-            int? childAge = null,
-            string directorFio = "Захаров Максим Николаевич")
+        public static void CreateClaimFromUI(EmployeeVacationListPage employeeVacationListPage, Claim2 claim)
         {
             employeeVacationListPage.CreateButton.WaitPresence();
             var claimCreationPage = employeeVacationListPage.CreateButton.ClickAndOpen<ClaimCreationPage>();
-            claimCreationPage.ClaimTypeSelect.SelectValueByText(claimType.GetDescription());
-            if (childAge != null)
+            claimCreationPage.ClaimTypeSelect.SelectValueByText(claim.Type.GetDescription());
+            if (claim.Type == ClaimType.Child && claim.ChildAgeInMonths != null)
             {
-                claimCreationPage.ChildAgeInput.InputText($"{childAge}");
+                claimCreationPage.ChildAgeInput.InputText($"{claim.ChildAgeInMonths}");
             }
 
-            claimCreationPage.ClaimStartDatePicker.SetValue(startAndEndDate.Item1.ToString("dd.MM.yyyy"));
-            claimCreationPage.ClaimEndDatePicker.SetValue(startAndEndDate.Item2.ToString("dd.MM.yyyy"));
-            claimCreationPage.DirectorFioCombobox.SelectValue(directorFio);
+            claimCreationPage.ClaimStartDatePicker.SetValue(claim.StartDate.ToString("dd.MM.yyyy"));
+            claimCreationPage.ClaimEndDatePicker.SetValue(claim.EndDate.ToString("dd.MM.yyyy"));
+            claimCreationPage.DirectorFioCombobox.SelectValue(claim.Director.Name);
             employeeVacationListPage = claimCreationPage.SendButton.ClickAndOpen<EmployeeVacationListPage>();
             employeeVacationListPage.CreateButton.WaitPresence();
         }
