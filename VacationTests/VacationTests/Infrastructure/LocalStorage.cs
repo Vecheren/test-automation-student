@@ -1,4 +1,5 @@
 using Kontur.Selone.Extensions;
+using Kontur.Selone.WebDrivers;
 using OpenQA.Selenium;
 
 namespace VacationTests.Infrastructure
@@ -7,9 +8,9 @@ namespace VacationTests.Infrastructure
     {
         private readonly IWebDriver webDriver;
 
-        public LocalStorage(IWebDriver webDriver)
+        public LocalStorage(IPooledWebDriver webDriver)
         {
-            this.webDriver = webDriver;
+            this.webDriver = webDriver.WrappedDriver;
         }
 
         public long Length => (long)webDriver.JavaScriptExecutor().ExecuteScript("return localStorage.length;");

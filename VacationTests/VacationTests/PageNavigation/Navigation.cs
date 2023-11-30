@@ -1,4 +1,5 @@
 using Kontur.Selone.Pages;
+using Kontur.Selone.WebDrivers;
 using OpenQA.Selenium;
 using VacationTests.Infrastructure.PageElements;
 using VacationTests.PageObjects;
@@ -10,9 +11,9 @@ namespace VacationTests.PageNavigation
         private readonly ControlFactory controlFactory;
         private readonly IWebDriver webDriver;
 
-        public Navigation(IWebDriver webDriver, ControlFactory controlFactory)
+        public Navigation(IPooledWebDriver webDriver, ControlFactory controlFactory)
         {
-            this.webDriver = webDriver;
+            this.webDriver = webDriver.WrappedDriver;
             this.controlFactory = controlFactory;
         }
 

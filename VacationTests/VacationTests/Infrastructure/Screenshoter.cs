@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Kontur.Selone.WebDrivers;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
@@ -10,9 +11,9 @@ namespace VacationTests.Infrastructure
 	{
 		private readonly IWebDriver webDriver;
 
-		public Screenshoter(IWebDriver webDriver)
+		public Screenshoter(IPooledWebDriver webDriver)
 		{
-			this.webDriver = webDriver;
+			this.webDriver = webDriver.WrappedDriver;
 		}
             
 		public void CreateAndSaveScreenshot()

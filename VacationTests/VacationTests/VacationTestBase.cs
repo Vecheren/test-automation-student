@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using Kontur.Selone.WebDrivers;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using VacationTests.Claims;
@@ -16,19 +17,19 @@ namespace VacationTests
 {
     public abstract class VacationTestBase
     {
-        protected IWebDriver WebDriver => MyBrowserPool.Get();
-        protected ClaimStorage ClaimStorage => new(LocalStorage);
-        protected LocalStorage LocalStorage => new(WebDriver);
-        private ControlFactory ControlFactory => new(LocalStorage, ClaimStorage);
-        protected Navigation Navigation => new(WebDriver, ControlFactory);
-        private Screenshoter Screenshoter => new(WebDriver); 
+        protected IWebDriver WebDriver => DIContainer.GetRequiredService<IPooledWebDriver>().WrappedDriver;
+        protected ClaimStorage ClaimStorage => DIContainer.GetRequiredService<ClaimStorage>();
+        protected LocalStorage LocalStorage => DIContainer.GetRequiredService<LocalStorage>();
+        private ControlFactory ControlFactory => DIContainer.GetRequiredService<ControlFactory>();
+        protected Navigation Navigation => DIContainer.GetRequiredService<Navigation>();
+        private Screenshoter Screenshoter => DIContainer.GetRequiredService<Screenshoter>();
         
         [TearDown]
         public void TearDown()
         {
             ClaimStorage.ClearClaims();
             Screenshoter.SaveTestFailureScreenshot();
-            MyBrowserPool.Release();
+            DIContainer.ScopeDispose();
         }
     }
     
@@ -39,7 +40,7 @@ namespace VacationTests
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            MyBrowserPool.Dispose();
+            DIContainer.FullDispose();
         }
     }
 }
