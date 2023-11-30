@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using NUnit.Framework.Internal.Commands;
 using OpenQA.Selenium;
+using OpenQA.Selenium.DevTools;
 using OpenQA.Selenium.Firefox;
 using VacationTests.Claims;
 using VacationTests.Infrastructure.PageElements;
@@ -18,6 +19,7 @@ namespace VacationTests.Infrastructure
         static DIContainer()
         {
             var serviceCollections = new ServiceCollection();
+            serviceCollections.AddScoped<ILog, MyLog>();
             serviceCollections.AddSingleton<ControlFactory>(_ => new ControlFactory());
             serviceCollections.AddSingleton<IWebDriverFactory>(_ =>
             {
